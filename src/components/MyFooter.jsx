@@ -13,7 +13,7 @@ const MyFooter = () => {
 
         {/* Link */}
         <Row className="mb-2 text-center text-white gy-2">
-          <Col xs={12} md="auto">
+          <Col xs={12} md="auto" className='gold-text'>
             <small>© 2025 Fuori di testo Inc. Tutti i diritti riservati.</small>
           </Col>
         </Row>
