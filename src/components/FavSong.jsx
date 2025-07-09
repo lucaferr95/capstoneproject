@@ -22,20 +22,34 @@ const Favourites = () => {
         <Row className="g-3">
           {favourites.map((song, index) => (
             <Col key={index} md={4}>
-              <Card className="bg-dark text-white border-0">
-                <Card.Img variant="top" src={song.album.cover} alt={song.title} />
-                <Card.Body>
-                  <Card.Title>{song.title}</Card.Title>
-                  <Card.Text>{song.artist.name}</Card.Text>
-                  <Button
-                    className="glow-button"
-                    variant="danger"
-                    onClick={() => handleRemove(song)}
-                  >
-                    Rimuovi
-                  </Button>
-                </Card.Body>
-              </Card>
+              <Card className="bg-primary text-white border-0 gold-text">
+  <Card.Img src={song.album.cover_medium} />
+  <Card.Body>
+  <Card.Title>{song.title}</Card.Title>
+  <Card.Text>{song.artist.name}</Card.Text>
+
+  <div className="d-flex flex-column">
+    <Link
+      to={`/lyrics/${encodeURIComponent(song.artist.name)}/${encodeURIComponent(song.title)}`}
+      className="mb-2"
+    >
+      <Button className="glow-button gold-text bg-dark w-100">
+        Leggi testo
+      </Button>
+    </Link>
+
+    <Button
+      className="glow-button w-100"
+      variant="danger"
+      onClick={() => handleRemove(song)}
+    >
+      Rimuovi
+    </Button>
+  </div>
+</Card.Body>
+
+</Card>
+
             </Col>
           ))}
         </Row>

@@ -2,11 +2,22 @@ import { Navbar, Container, Nav, NavDropdown, Form, Row, Col } from "react-boots
 import { Link, useLocation } from "react-router-dom";
 import "../App.css";
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const MyNavbar = () => {
   const location = useLocation();
   const avatar = useSelector(state => state.user?.avatarUrl) || "/assets/avatar/default.png";
-
+  const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState('');
+  
+  const handleSearch = (e) => {
+  e.preventDefault();
+  if (searchValue.trim()) {
+    navigate(`/search?q=${encodeURIComponent(searchValue)}`);
+    setSearchValue('');
+  }
+};
   return (
     <Navbar expand="lg" className="bg-black border-bottom border-body py-2" data-bs-theme="dark">
       <Container fluid>
@@ -57,14 +68,17 @@ const MyNavbar = () => {
           {/* Col 3: Search + Avatar */}
           <Col xs={12} lg={4} className="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end gap-3">
             {/* Search */}
-            <Form className="d-flex w-100 w-lg-auto">
-              <Form.Control
-                type="search"
-                placeholder="Cerca testi o artisti"
-                className="me-2 rounded glow-button gold-text"
-                aria-label="Search"
-              />
-            </Form>
+            <Form className="d-flex w-100 w-lg-auto" onSubmit={handleSearch}>
+  <Form.Control
+    type="search"
+    placeholder="Cerca testi o artisti"
+    className="me-2 rounded glow-button gold-text"
+    aria-label="Search"
+    value={searchValue}
+    onChange={(e) => setSearchValue(e.target.value)}
+  />
+</Form>
+
 
             {/* Avatar + Dropdown (solo desktop) */}
             <NavDropdown

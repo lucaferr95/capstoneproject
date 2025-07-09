@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { addToFavouriteAction } from './Redux/Action';
+import { useNavigate } from 'react-router-dom';
+import QuoteOfTheDay from './QuoteOfTheDay';  // ✅ Import componente
 
 const PopularArtists = () => {
   const dispatch = useDispatch();
   const [popularData, setPopularData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const internationalArtists = ['Taylor Swift', 'The Weeknd', 'Drake', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
@@ -59,6 +62,9 @@ const PopularArtists = () => {
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
+      {/* ✅ Frase del giorno prima delle sezioni */}
+      <QuoteOfTheDay />
+
       {popularData.map((section, sectionIndex) => (
         <div key={sectionIndex} className="mb-5">
           <div className="d-flex justify-content-center mb-4">
@@ -82,7 +88,11 @@ const PopularArtists = () => {
                         <Card.Text>{song.artist.name}</Card.Text>
                         <Button
                           className="me-2 mb-2 glow-button gold-text bg-dark"
-                          onClick={() => console.log('Leggi testo per', song.title)}
+                          onClick={() =>
+                            navigate(
+                              `/lyrics/${encodeURIComponent(song.artist.name)}/${encodeURIComponent(song.title)}`
+                            )
+                          }
                         >
                           Leggi testo
                         </Button>
