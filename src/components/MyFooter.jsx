@@ -1,11 +1,15 @@
 import { Container, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
+
+
 
 const MyFooter = () => {
   return (
     <footer className="bg-black border-bottom border-body" data-bs-theme="dark w-100 text-white py-4 mt-5">
       <Container>
         {/* Lingua */}
-        <Row className="mb-3 pt-3">
+        <Row className="mb-3 pt-3 mt-1">
           <Col className="text-center">
             <small>Italia | English (UK)</small>
           </Col>
@@ -32,7 +36,8 @@ const MyFooter = () => {
             <a href="#" className="text-white text-decoration-none">Supporto</a>
           </Col>
           <Col xs={12} md="auto">
-            <a href="#" className="text-white text-decoration-none">Feedback</a>
+           <Nav.Link as={Link} to="/dicono-di-noi">Dicono di noi</Nav.Link>
+
           </Col>
         </Row>
       </Container>

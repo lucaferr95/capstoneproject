@@ -319,3 +319,13 @@ p a:hover {
   width: auto;
   min-width: unset;
 }
+
+.feedback-bg {
+  background: linear-gradient(to bottom right, #111, #222);
+  min-height: 100vh;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); /* tocco dorato */
+}
+img.logo {
+  clip-path: circle(50%);
+}

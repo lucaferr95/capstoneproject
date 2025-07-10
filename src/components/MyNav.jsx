@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
+
 const MyNavbar = () => {
   const location = useLocation();
   const avatar = useSelector(state => state.user?.avatarUrl) || "/assets/avatar/default.png";
@@ -24,16 +25,16 @@ const MyNavbar = () => {
         <Row className="w-100 align-items-center text-center text-lg-start">
           {/* Col 1: Logo + Titolo */}
           <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center gap-1 gap-lg-1 justify-content-center justify-content-lg-start mb-2 mb-lg-0">
-            <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center">
+            <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center img.logo ms-2">
               <img
-                src="/assets/logo/logo fuori di testo.png"
+                src="/assets/logo/logo fuori di testo 2.PNG"
                 alt="logo"
                 width="150"
                 height="auto"
                 className="mb-1"
               />
-              <span className="eater gold-text" style={{ fontSize: '1.7rem' }}>
-                FUORI DI TESTO
+              <span className="eater text-white-75 bg-black opacity-75 ms-2" style={{ fontSize: '1.5rem' }}>
+                ©FUORI DI TESTO
               </span>
             </Navbar.Brand>
           </Col>
@@ -69,13 +70,14 @@ const MyNavbar = () => {
               >
                 quiz
               </Nav.Link>
-               <Nav.Link
-                as={Link}
-                to="/"
-                className={`glow-button rounded-end-pill ${location.pathname === '/novità' ? 'active' : ''} gold-text`}
-              >
-                Lascia un commento
-              </Nav.Link>
+                <Nav.Link
+  as={Link}
+  to="/lascia-un-commento"
+  className={`glow-button rounded-end-pill ${location.pathname === '/lascia-un-commento' ? 'active' : ''} gold-text`}
+>
+  Lascia un commento
+</Nav.Link>
+
             </Nav>
           </Col>
 

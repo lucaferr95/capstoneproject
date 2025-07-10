@@ -32,19 +32,23 @@ const SearchResults = () => {
   }, [query]);
 
   return (
-    <Container className="text-white mt-4">
+    <Container className="text-white mt-4 mb-4">
       <button className="gold-text glow-button bg-dark">Risultati per “{query}”</button>
       {loading ? (
         <Spinner animation="border" />
       ) : (
-        <Row className="mt-3 g-3">
-          {results.slice(0, 10).map((song, idx) => (
+        <Row className="mt-3 g-5">
+          {results.slice(0, 24).map((song, idx) => (
             <Col md={4} key={idx}>
               <Card className="bg-primary text-white border-0 gold-text">
   <Card.Img src={song.album.cover_medium} />
   <Card.Body>
     <Card.Title>{song.title}</Card.Title>
-    <Card.Text>{song.artist.name}</Card.Text>
+    <Card.Title>
+      <Link to={`/search?q=${encodeURIComponent(song.artist.name)}`} className="text-decoration-none gold-text">
+      {song.artist.name}
+    </Link>
+    </Card.Title>
 
     <div className="d-flex flex-column">
       <Link

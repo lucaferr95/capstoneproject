@@ -14,7 +14,7 @@ const Favourites = () => {
   };
 
   return (
-    <Container className="text-white">
+    <Container className="text-white mt-0 mb-5">
       <h1>I tuoi preferiti</h1>
       {favourites.length === 0 ? (
         <p>Non hai aggiunto nessun brano ai preferiti ancora.</p>
@@ -26,7 +26,12 @@ const Favourites = () => {
   <Card.Img src={song.album.cover_medium} />
   <Card.Body>
   <Card.Title>{song.title}</Card.Title>
-  <Card.Text>{song.artist.name}</Card.Text>
+  <Card.Title>
+  <Link to={`/search?q=${encodeURIComponent(song.artist.name)}`} className="text-decoration-none gold-text">
+  {song.artist.name}
+</Link>
+
+</Card.Title>
 
   <div className="d-flex flex-column">
     <Link

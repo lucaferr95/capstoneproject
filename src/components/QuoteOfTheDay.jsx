@@ -112,8 +112,8 @@ const todayIndex = new Date().getDate() % dailyQuotes.length;
 const quote = dailyQuotes[todayIndex];
 
 const QuoteOfTheDay = () => (
-  <div className="quote-box px-3 py-2 rounded mb-4" style={{
-    backgroundColor: '#0b0c0f',
+  <div className="quote-box px-3 py-2 rounded mb-4 bg-black bg-gradient" style={{
+    
     borderLeft: '4px solid #ffd700'
   }}>
     <small className="gold-text">🎤 Frase del giorno</small>

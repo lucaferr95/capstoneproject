@@ -15,6 +15,8 @@ import SearchResults from './components/SearchResults';
 import Login from './components/Login';
 import Register from './components/Register.jsx';
 import NotFound from './components/NotFound.jsx';
+import DiconoDiNoi from './components/DiconoDiNoi.jsx';
+import FeedbackForm from './components/FeedbackForm.jsx';
 
 const App = () => {
   return (
@@ -33,6 +35,9 @@ const App = () => {
               <Route path="/favourites" element={<Favourites />} />
               <Route path="/novità" element={<NewSongs />} />
               <Route path="/search" element={<SearchResults />} />
+              <Route path="/dicono-di-noi" element={<DiconoDiNoi />} />
+              <Route path="/lascia-un-commento" element={<FeedbackForm />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
