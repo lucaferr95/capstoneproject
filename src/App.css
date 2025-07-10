@@ -313,3 +313,9 @@ p a:hover {
   border-style: solid;
   border-color: rgba(30, 30, 30, 0.85) transparent transparent transparent;
 }
+
+.btn-fixed {
+  display: inline-block;
+  width: auto;
+  min-width: unset;
+}

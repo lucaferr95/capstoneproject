@@ -53,7 +53,7 @@ const dailyQuotes = [
     artist: "Mia Martini",
     title: "Almeno tu nell'universo"
   }
-
+,
   {
   text: "It's a beautiful day, don't let it get away.",
   artist: "U2",
@@ -79,7 +79,7 @@ const dailyQuotes = [
   artist: "Laura Pausini",
   title: "Strani amori"
 }
-
+,
 {
   text: "È stato meglio lasciarci che non esserci mai incontrati.",
   artist: "Fabrizio De André",

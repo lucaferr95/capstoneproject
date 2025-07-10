@@ -14,6 +14,7 @@ import store from './components/store';
 import SearchResults from './components/SearchResults';
 import Login from './components/Login';
 import Register from './components/Register.jsx';
+import NotFound from './components/NotFound.jsx';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="/favourites" element={<Favourites />} />
               <Route path="/novità" element={<NewSongs />} />
               <Route path="/search" element={<SearchResults />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
 
