@@ -23,7 +23,7 @@ const MyNavbar = () => {
       <Container fluid>
         <Row className="w-100 align-items-center text-center text-lg-start">
           {/* Col 1: Logo + Titolo */}
-          <Col xs={12} lg={4} className="d-flex flex-column flex-lg-row align-items-center gap-1 gap-lg-3 justify-content-center justify-content-lg-start mb-2 mb-lg-0">
+          <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center gap-1 gap-lg-1 justify-content-center justify-content-lg-start mb-2 mb-lg-0">
             <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center">
               <img
                 src="/assets/logo/logo fuori di testo.png"
@@ -39,34 +39,48 @@ const MyNavbar = () => {
           </Col>
 
           {/* Col 2: Nav Links */}
-          <Col xs={12} lg={4} className="mb-3 mb-lg-0">
+          <Col xs={12} lg={6} className="mb-3 mb-lg-0">
             <Nav className="d-flex flex-column flex-lg-row gap-3 justify-content-center align-items-center">
               <Nav.Link
                 as={Link}
                 to="/"
-                className={`glow-button ${location.pathname === '/' ? 'active' : ''} gold-text`}
+                className={`glow-button rounded-start-pill ${location.pathname === '/' ? 'active' : ''} gold-text`}
               >
                 Home
               </Nav.Link>
               <Nav.Link
                 as={Link}
                 to="/novità"
-                className={`glow-button ${location.pathname === '/novità' ? 'active' : ''} gold-text`}
+                className={`glow-button roun ${location.pathname === '/novità' ? 'active' : ''} gold-text`}
               >
                 Novità
               </Nav.Link>
               <Nav.Link
                 as={Link}
                 to="/favourites"
-                className={`glow-button ${location.pathname === '/favourites' ? 'active' : ''} gold-text`}
+                className={`glow-button  ${location.pathname === '/favourites' ? 'active' : ''} gold-text`}
               >
-                Brani preferiti
+                Testi preferiti
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/"
+                className={`glow-button  ${location.pathname === '/novità' ? 'active' : ''} gold-text`}
+              >
+                quiz
+              </Nav.Link>
+               <Nav.Link
+                as={Link}
+                to="/"
+                className={`glow-button rounded-end-pill ${location.pathname === '/novità' ? 'active' : ''} gold-text`}
+              >
+                Lascia un commento
               </Nav.Link>
             </Nav>
           </Col>
 
           {/* Col 3: Search + Avatar */}
-          <Col xs={12} lg={4} className="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end gap-3">
+          <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end gap-3">
             {/* Search */}
             <Form className="d-flex w-100 w-lg-auto" onSubmit={handleSearch}>
   <Form.Control
@@ -96,6 +110,9 @@ const MyNavbar = () => {
               align="end"
             >
               <NavDropdown.Item as={Link} to="/profilo" className="gold-text">Profilo</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/login" className="gold-text">Login</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/register" className="gold-text">Registrati</NavDropdown.Item>
+
               <NavDropdown.Item href="#" className="gold-text">Settings</NavDropdown.Item>
               <NavDropdown.Item href="https://www.paypal.com/paypalme/lucaf95" className="gold-text">
                 Sostieni il progetto

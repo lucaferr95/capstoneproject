@@ -12,7 +12,8 @@ import './App.css';
 import { Provider } from 'react-redux';
 import store from './components/store';
 import SearchResults from './components/SearchResults';
-import QuoteOfTheDay from './components/QuoteOfTheDay';
+import Login from './components/Login';
+import Register from './components/Register.jsx';
 
 const App = () => {
   return (
@@ -23,12 +24,14 @@ const App = () => {
 
           <div className="flex-grow-1">
             <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
               <Route path="/" element={<PopularArtists />} />
               <Route path="/lyrics/:artist/:title/*" element={<LyricsPage />} />
               <Route path="/favourites" element={<Favourites />} />
               <Route path="/novità" element={<NewSongs />} />
               <Route path="/search" element={<SearchResults />} />
-              <Route path="/search" element={<QuoteOfTheDay />} />
             </Routes>
           </div>
 

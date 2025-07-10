@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+//scelgo 10 frasi di canzoni che cambiano ogni giorno nella home
 const dailyQuotes = [
   {
     text: "Ti proteggerò dalle paure delle ipocondrie.",
@@ -52,6 +53,59 @@ const dailyQuotes = [
     artist: "Mia Martini",
     title: "Almeno tu nell'universo"
   }
+
+  {
+  text: "It's a beautiful day, don't let it get away.",
+  artist: "U2",
+  title: "Beautiful Day"
+},
+{
+  text: "I will survive, oh as long as I know how to love I know I'll stay alive.",
+  artist: "Gloria Gaynor",
+  title: "I Will Survive"
+},
+{
+  text: "Imagine all the people living life in peace.",
+  artist: "John Lennon",
+  title: "Imagine"
+},
+{
+  text: "La vita è un brivido che vola via, è tutto un equilibrio sopra la follia.",
+  artist: "Vasco Rossi",
+  title: "Sally"
+},
+{
+  text: "Ogni tanto penso a te, e mi manca il tuo respiro.",
+  artist: "Laura Pausini",
+  title: "Strani amori"
+}
+
+{
+  text: "È stato meglio lasciarci che non esserci mai incontrati.",
+  artist: "Fabrizio De André",
+  title: "Amore che vieni, amore che vai"
+},
+{
+  text: "Perché tu sei un essere speciale, ed io avrò cura di te.",
+  artist: "Franco Battiato",
+  title: "La cura"
+},
+{
+  text: "Cause baby, you're gonna be the one that saves me.",
+  artist: "Oasis",
+  title: "Wonderwall"
+},
+{
+  text: "Sono solo parole, e restano parole.",
+  artist: "Noemi",
+  title: "Sono solo parole"
+},
+{
+  text: "E se domani io non potessi rivedere te…",
+  artist: "Mina",
+  title: "E se domani"
+}
+
 ];
 
 const todayIndex = new Date().getDate() % dailyQuotes.length;

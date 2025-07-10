@@ -45,7 +45,7 @@ const LyricsPage = () => {
   return (
     <div className="lyrics-page">
       <Container fluid>
-        <Button variant="secondary" onClick={() => navigate(-1)} className="mb-4">
+        <Button variant="dark" onClick={() => navigate(-1)} className="mb-4 gold-text">
           ← Torna indietro
         </Button>
         <Row className="h-100">
