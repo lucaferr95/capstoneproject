@@ -23,6 +23,7 @@ const FeedbackForm = () => {
       })
       .then(() => {
         setSuccess(true);
+        localStorage.setItem("refreshFeedback", "true");
         setComment("");
       })
       .catch(() => {

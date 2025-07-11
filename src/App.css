@@ -329,3 +329,24 @@ p a:hover {
 img.logo {
   clip-path: circle(50%);
 }
+
+.bubble-card {
+  border-radius: 20px;
+  position: relative;
+  background-color: #2f9313;
+  padding: 1rem;
+  color: gold;
+}
+
+/* Coda in basso */
+.bubble-card::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: #0d6efd transparent;
+  display: block;
+  width: 0;
+}

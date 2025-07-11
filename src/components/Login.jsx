@@ -55,6 +55,7 @@ const Login = () => {
     }
   };
 
+
   return (
     <div className="auth-page">
       <div className="banner gold-text">Capstone Project by Luca Ferrara</div>

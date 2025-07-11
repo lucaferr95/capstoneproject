@@ -8,38 +8,56 @@ const DiconoDiNoi = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/feedback") 
-      .then(response => {
-        if (!response.ok) throw new Error("Errore nel recupero dei feedback");
-        return response.json();
-      })
-      
+  const fetchFeedback = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/feedback");
+      const data = await res.json();
+      setComments(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
 
-      .then(data => {
-        setComments(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Errore:", error);
-        setLoading(false);
-      });
-  }, []);
+      setLoading(false);
+
+      // pulizia flag
+      localStorage.removeItem("refreshFeedback");
+    } catch (error) {
+      console.error("Errore nel caricamento feedback:", error);
+      setLoading(false);
+    }
+  };
+
+  // se è stato appena inviato un feedback, aggiorna
+  if (localStorage.getItem("refreshFeedback") === "true") {
+    fetchFeedback(); // richiama i nuovi commenti
+  } else {
+    fetchFeedback(); // anche al primo accesso
+  }
+}, []);
+
 
   return (
-    <Container className="mt-4 bg-black bg-gradient">
-      <h2 className="text-center gold-text">Cosa dicono di noi gli utenti</h2>
+    <Container className="mt-4 py-2 px-5 bg-black bg-gradient mb-4">
+      <h2 className="text-center gold-text pt-3">Cosa dicono di noi gli utenti </h2>
       {loading ? (
-        <div className="text-center my-5">
+        <div className="text-center my-2">
           <Spinner animation="border" />
         </div>
       ) : (
-        <Row className="mt-4">
+        <Row className="mt-4 g-4">
           {comments.map((comment) => (
-            <Col key={comment.id} md={6} lg={4} className="mb-4">
-              <Card className="shadow-sm">
+            <Col key={comment.id} md={6} lg={4} className="mb-4 pb-4 ">
+              <Card className="shadow-sm bg-primary bg-gradient rounded-start bubble-card">
                 <Card.Body>
-                  <Card.Title>{comment.user?.username || "Anonimo"}</Card.Title>
-                  <Card.Text>{comment.comment}</Card.Text>
+                  <Card.Title className="gold-text">
+  {comment.user?.username || "Anonimo"}{" "}
+  <span className="text-white small fst-italic ms-1">
+    ({new Date(comment.createdAt).toLocaleDateString("it-IT")})
+  </span>
+</Card.Title>
+
+                  <Card.Text className="gold-text fs-6">
+  {comment.comment}
+</Card.Text>
+            
+
                 </Card.Body>
               </Card>
             </Col>
