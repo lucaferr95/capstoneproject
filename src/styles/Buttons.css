@@ -1,0 +1,24 @@
+.glow-button {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: transparent;
+  border: 2px solid #fdfffe;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(109, 150, 13, 0.5), 0 0 20px rgba(0, 255, 136, 0.3),
+    0 0 30px rgba(0, 255, 136, 0.2);
+  transition: all 0.4s ease;
+}
+
+.glow-button:hover {
+  background-color: #4809aedc;
+  color: #000000;
+  box-shadow: 0 0 20px rgba(69, 15, 194, 0.8), 0 0 30px rgba(243, 248, 246, 0.6),
+    0 0 40px rgba(251, 255, 253, 0.4);
+}
+
+.btn-fixed {
+  display: inline-block;
+  width: auto;
+}

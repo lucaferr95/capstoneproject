@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 
 
 
+
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');

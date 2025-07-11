@@ -7,7 +7,10 @@ import Favourites from './components/FavSong';
 import LyricsPage from './components/LyricsPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+
+import './styles/App.css';
+import './styles/Buttons.css';
+
 
 import { Provider } from 'react-redux';
 import store from './components/store';

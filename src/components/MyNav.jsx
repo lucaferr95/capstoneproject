@@ -2,7 +2,9 @@ import { Navbar, Container, Nav, NavDropdown, Form, Row, Col } from "react-boots
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import "../App.css";
+import '../styles/Navbar.css'
+import '../styles/Buttons.css';
+
 
 const MyNavbar = () => {
   const location = useLocation();
@@ -27,6 +29,8 @@ const MyNavbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token"); // Rimuove token dal localStorage
     navigate("/login");              // Reindirizza alla login
+    localStorage.removeItem("username");
+    dispatch({ type: 'RESET_FAVOURITES', payload: [] });
   };
 
   return (
@@ -62,7 +66,7 @@ const MyNavbar = () => {
                 Testi preferiti
               </Nav.Link>
               <Nav.Link as={Link} to="/" className={`glow-button ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
-                quiz
+                Quiz
               </Nav.Link>
               <Nav.Link as={Link} to="/lascia-un-commento" className={`glow-button rounded-end-pill ${location.pathname === "/lascia-un-commento" ? "active" : ""} gold-text`}>
                 Lascia un commento

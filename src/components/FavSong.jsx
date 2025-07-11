@@ -4,14 +4,37 @@ import { removeFromFavouriteAction } from './Redux/Action';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { BsStarFill } from 'react-icons/bs'; 
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import '../styles/Buttons.css';
+
+
+
 
 const Favourites = () => {
   const favourites = useSelector(state => state.fav.list);
   const dispatch = useDispatch();
+  const isLoggedIn = !!localStorage.getItem("token");
+
+const handleAddFavourite = (song) => {
+  if (!isLoggedIn) {
+    alert("Devi essere loggato per aggiungere ai preferiti.");
+    return;
+  }
+  dispatch(addToFavouriteAction(song));
+};
+
 
   const handleRemove = (song) => {
     dispatch(removeFromFavouriteAction(song));
   };
+useEffect(() => {
+  const username = localStorage.getItem("username");
+  if (username) {
+    localStorage.setItem(`favourites_${username}`, JSON.stringify(favourites));
+  }
+}, [favourites]);
+
+
 
   return (
     <Container className="text-white mt-0 mb-5">
@@ -44,11 +67,11 @@ const Favourites = () => {
     </Link>
 
     <Button
-      className="glow-button w-100"
+      className="glow-button w-100 gold-text"
       variant="danger"
       onClick={() => handleRemove(song)}
     >
-      Rimuovi
+      Rimuovi dai preferiti
     </Button>
   </div>
 </Card.Body>

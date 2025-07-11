@@ -1,0 +1,60 @@
+.lyrics-page {
+  background-color: #e6f1ff;
+  min-height: 100vh;
+  padding: 2rem;
+  overflow-x: hidden;
+}
+
+.lyrics-box {
+  background: linear-gradient(185deg, #1d2977, #1d2344);
+  border-radius: 8px;
+  padding: 2rem;
+  font-family: "Fira Code", monospace;
+  line-height: 3.7;
+  height: 100%;
+  overflow-y: auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.lyrics-title {
+  margin-bottom: 1rem;
+  color: #d5c10c;
+}
+
+.lyrics-cover {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.lyrics-cover-placeholder {
+  width: 100%;
+  height: 300px;
+  background-color: #dee2e6;
+  border-radius: 8px;
+}
+
+.lyrics-column {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 6rem);
+}
+
+.karaoke-area {
+  margin-top: 2rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.karaoke-line {
+  opacity: 0.3;
+  transition: all 0.3s;
+  padding: 4px 0;
+}
+
+.karaoke-line.active {
+  color: #dcdcaa;
+  opacity: 1;
+  font-weight: bold;
+}

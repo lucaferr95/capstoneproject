@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 
 
+
 // Hook per effetto scrittura
 const useTypingEffect = (text, speed = 40) => {
   const [displayedText, setDisplayedText] = useState('');
@@ -39,7 +40,7 @@ const Register = () => {
   const welcomeText = `Beenvenuto/a utente da Luca (o dalla sua essenza digitale)
 nella magnifica app creata da me medesimo (o dalla mia essenza reale).
 Sei pronto a registrarti?`;
-  const typedMessage = useTypingEffect(welcomeText, 40); // velocità più lenta
+  const typedMessage = useTypingEffect(welcomeText, 40); // valore piu alto= velocita piu lenta
 
   const handleSubmit = async (e) => {
     e.preventDefault();

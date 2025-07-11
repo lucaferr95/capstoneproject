@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { addToFavouriteAction } from './Redux/Action';
-import { useNavigate } from 'react-router-dom';
-import QuoteOfTheDay from './QuoteOfTheDay'; 
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
+import { useNavigate, Link } from 'react-router-dom';
+import QuoteOfTheDay from './QuoteOfTheDay';
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import '../styles/Buttons.css';
 
 const PopularArtists = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const favourites = useSelector(state => state.fav.list);
+
   const [popularData, setPopularData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const internationalArtists = ['Taylor Swift', 'The Weeknd', 'Drake', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
@@ -55,7 +58,13 @@ const PopularArtists = () => {
   }, []);
 
   const handleFavouriteClick = (song) => {
-    dispatch(addToFavouriteAction(song));
+    const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
+
+    if (isAlreadyFavourite) {
+      dispatch(removeFromFavouriteAction(song));
+    } else {
+      dispatch(addToFavouriteAction(song));
+    }
   };
 
   return (
@@ -63,7 +72,6 @@ const PopularArtists = () => {
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
-      {/*Frase del giorno prima delle sezioni */}
       <QuoteOfTheDay />
 
       {popularData.map((section, sectionIndex) => (
@@ -76,43 +84,59 @@ const PopularArtists = () => {
 
           {section.data.map((artistData, index) => (
             <section key={index} className="mb-5 text-center">
-                      <Link to={`/search?q=${encodeURIComponent(artistData.artist)}`}>
-              <Button className="gold-text bg-primary bg-gradient btn-fixed fs-3 glow-button mb-3">
-                {artistData.artist}
-              </Button>
-            </Link>
+              <Link to={`/search?q=${encodeURIComponent(artistData.artist)}`}>
+                <Button className="gold-text bg-primary bg-gradient btn-fixed fs-3 glow-button mb-3">
+                  {artistData.artist}
+                </Button>
+              </Link>
+
               <Row className="g-5">
-                {artistData.songs.slice(0, 4).map((song, idx) => (
-                  <Col md={3} key={idx}>
-                    <Card className="bg-primary text-white border-0 gold-text">
-                      <Card.Img src={song.album.cover_medium} />
-                      <Card.Body>
-                        <Card.Title>{song.title}</Card.Title>
-                        <Card.Title>
-      <Link to={`/search?q=${encodeURIComponent(song.artist.name)}`} className="text-decoration-none gold-text">
-      {song.artist.name}
-    </Link>
-    </Card.Title>
-                        <Button
-                          className="me-2 mb-2 glow-button gold-text bg-dark"
-                          onClick={() =>
-                            navigate(
-                              `/lyrics/${encodeURIComponent(song.artist.name)}/${encodeURIComponent(song.title)}`
-                            )
-                          }
-                        >
-                          Leggi testo
-                        </Button>
-                        <Button
-                          className="glow-button gold-text bg-dark"
-                          onClick={() => handleFavouriteClick(song)}
-                        >
-                          Aggiungi ai preferiti
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
+                {artistData.songs.slice(0, 4).map((song, idx) => {
+                  const isFavourite = favourites.some(fav => fav.id === song.id);
+
+                  return (
+                    <Col md={3} key={idx}>
+                      <Card className="bg-primary text-white border-0 gold-text">
+                        <Card.Img src={song.album.cover_medium} />
+                        <Card.Body>
+                          <Card.Title>{song.title}</Card.Title>
+                          <Card.Title>
+                            <Link
+                              to={`/search?q=${encodeURIComponent(song.artist.name)}`}
+                              className="text-decoration-none gold-text"
+                            >
+                              {song.artist.name}
+                            </Link>
+                          </Card.Title>
+
+                          <Button
+                            className="me-2 mb-2 glow-button gold-text bg-dark"
+                            onClick={() =>
+                              navigate(`/lyrics/${encodeURIComponent(song.artist.name)}/${encodeURIComponent(song.title)}`)
+                            }
+                          >
+                            Leggi testo
+                          </Button>
+
+                          <Button
+                            className={`glow-button w-100 ${isFavourite ? 'bg-danger' : 'bg-dark'} gold-text`}
+                            onClick={() => handleFavouriteClick(song)}
+                          >
+                            {isFavourite ? (
+                              <>
+                                <AiFillHeart className="me-2" /> Rimuovi dai preferiti
+                              </>
+                            ) : (
+                              <>
+                                <AiOutlineHeart className="me-2" /> Aggiungi ai preferiti
+                              </>
+                            )}
+                          </Button>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  );
+                })}
               </Row>
             </section>
           ))}

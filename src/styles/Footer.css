@@ -1,0 +1,14 @@
+footer {
+  color: #ffd700 !important;
+  font-family: "Fira Code", monospace !important;
+}
+
+footer a,
+footer a:visited {
+  color: #ffd700 !important;
+}
+
+footer a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
