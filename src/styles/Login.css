@@ -97,9 +97,9 @@
   position: absolute;
   top: 100%;
   left: 60px;
-  border-width: 10px 10px 0 10px;
+  border-width: 20px 20px 0 20px;
   border-style: solid;
-  border-color: rgba(30, 30, 30, 0.85) transparent transparent transparent;
+  border-color: rgb(30, 30, 30) transparent transparent transparent;
 }
 button {
   width: 100%;

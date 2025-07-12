@@ -5,6 +5,14 @@
   overflow-x: hidden;
 }
 
+.lyrics-box pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  overflow-x: auto;
+  line-height: 3.5;
+}
+
 .lyrics-box {
   background: linear-gradient(185deg, #1d2977, #1d2344);
   border-radius: 8px;
@@ -48,13 +56,31 @@
 }
 
 .karaoke-line {
-  opacity: 0.3;
   transition: all 0.3s;
   padding: 4px 0;
 }
 
 .karaoke-line.active {
-  color: #dcdcaa;
-  opacity: 1;
+  background-color: rgba(255, 215, 0, 0.2);
+  border-left: 4px solid #ffd700;
+  padding-left: 8px;
   font-weight: bold;
+}
+
+.instagram-btn {
+  background-color: #833ab4;
+  border: none;
+  color: white;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.instagram-btn:hover {
+  transform: scale(1.03);
+  background-color: #c13584;
+}
+::selection {
+  color: #ffffff;
+  text-decoration: underline;
+  margin-top: 2rem;
 }

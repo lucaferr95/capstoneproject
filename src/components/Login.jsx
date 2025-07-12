@@ -37,7 +37,7 @@ const Login = () => {
   const [data, setData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
-  const welcomeText = `Già registrato? Accedi pure.
+  const welcomeText = `Giià registrato? Accedi pure.
   Ti dò il permesso...
    (Almeno per oggi ehehe)`;
   const typedMessage = useTypingEffect(welcomeText, 40);

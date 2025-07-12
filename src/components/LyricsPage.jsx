@@ -2,35 +2,73 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
+import {
+  addToFavouriteAction,
+  removeFromFavouriteAction,
+} from './Redux/Action';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
-import '../styles/LyricsPage.css'
+import { FaInstagram } from 'react-icons/fa';
+import LyricCardPreview from './LyricCardPreview';
+import html2canvas from 'html2canvas';
+import '../styles/LyricsPage.css';
+import '../styles/CardShare.css';
 
 const LyricsPage = () => {
   const { artist, title } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const favourites = useSelector(state => state.fav.list);
+  const favourites = useSelector((state) => state.fav.list);
 
   const [lyrics, setLyrics] = useState('');
   const [coverUrl, setCoverUrl] = useState(null);
   const [songData, setSongData] = useState(null);
+  const [highlightedText, setHighlightedText] = useState('');
 
-  // Controlla se il brano corrente è tra i preferiti
-  const isFavourite = songData && favourites.some(fav => fav.id === songData.id);
+  // Utente evidenzia manualmente il testo
+  const handleGenerateCard = () => {
+    const selectedText = window.getSelection().toString().trim();
+    if (selectedText) {
+      setHighlightedText(selectedText);
+    }
+  };
 
-  // Toggle preferiti: aggiunge o rimuove il brano
+  // Esporta la card come immagine
+  const exportCardAsImage = () => {
+  const cardElement = document.getElementById('card-to-export');
+  if (!cardElement) return;
+
+  const img = cardElement.querySelector('img');
+  if (img && !img.complete) {
+    img.onload = () => {
+      html2canvas(cardElement, { useCORS: true }).then((canvas) => {
+        const link = document.createElement('a');
+        link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    };
+    return;
+  }
+
+  html2canvas(cardElement, { useCORS: true }).then((canvas) => {
+    const link = document.createElement('a');
+    link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+};
+
+
+  const isFavourite =
+    songData && favourites.some((fav) => fav.id === songData.id);
+
   const handleFavouriteClick = () => {
     if (!songData) return;
-
-    const isAlreadyFavourite = favourites.some(fav => fav.id === songData.id);
-
-    if (isAlreadyFavourite) {
-      dispatch(removeFromFavouriteAction(songData));
-    } else {
-      dispatch(addToFavouriteAction(songData));
-    }
+    const exists = favourites.some((fav) => fav.id === songData.id);
+    exists
+      ? dispatch(removeFromFavouriteAction(songData))
+      : dispatch(addToFavouriteAction(songData));
   };
 
   useEffect(() => {
@@ -55,7 +93,6 @@ const LyricsPage = () => {
         const data = await response.json();
         const song = data.data?.[0];
         setSongData(song);
-
         if (song?.album?.cover_xl) {
           setCoverUrl(song.album.cover_xl);
         }
@@ -79,45 +116,77 @@ const LyricsPage = () => {
           ← Torna indietro
         </Button>
 
-        <Row className="h-100">
+        <Row>
           <Col md={8} className="lyrics-column">
             <div className="lyrics-box gold-text">
               <h3 className="lyrics-title">
                 {decodeURIComponent(artist)} – {decodeURIComponent(title)}
               </h3>
-              {lyrics ? <pre>{lyrics}</pre> : <Spinner animation="border" />}
+
+              <div>
+                {lyrics ? (
+                 <div className="karaoke-area gold-text">
+  {lyrics.split('\n').map((line, index) => (
+    <p key={index} className="karaoke-line">
+      {line}
+    </p>
+  ))}
+</div>
+
+                ) : (
+                  <Spinner animation="border" />
+                )}
+              </div>
+
+              <LyricCardPreview
+                line={highlightedText}
+                artist={artist}
+                title={title}
+                coverUrl={coverUrl}
+                exportCardAsImage={exportCardAsImage}
+              />
             </div>
           </Col>
 
-          <Col md={4} className="d-flex justify-content-center align-items-start">
-            {coverUrl ? (
-              <div className="w-100">
+          <Col md={4}>
+            <div className="w-100">
+              {coverUrl ? (
                 <img
                   src={coverUrl}
                   alt="Album Cover"
-                  className="lyrics-cover"
+                  className="lyrics-cover mb-3"
                 />
+              ) : (
+                <div className="lyrics-cover-placeholder" />
+              )}
 
-                {songData && (
-                  <Button
-                    className={`glow-button w-100 ${isFavourite ? 'bg-danger' : 'bg-dark'} gold-text`}
-                    onClick={handleFavouriteClick}
-                  >
-                    {isFavourite ? (
-                      <>
-                        <AiFillHeart className="me-2" /> Rimuovi dai preferiti
-                      </>
-                    ) : (
-                      <>
-                        <AiOutlineHeart className="me-2" /> Aggiungi ai preferiti
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className="lyrics-cover-placeholder w-100" />
-            )}
+              {songData && (
+                <Button
+                  className={`glow-button w-100 mb-3 ${
+                    isFavourite ? 'bg-danger' : 'bg-dark'
+                  } gold-text`}
+                  onClick={handleFavouriteClick}
+                >
+                  {isFavourite ? (
+                    <>
+                      <AiFillHeart className="me-2" /> Rimuovi dai preferiti
+                    </>
+                  ) : (
+                    <>
+                      <AiOutlineHeart className="me-2" /> Aggiungi ai preferiti
+                    </>
+                  )}
+                </Button>
+              )}
+
+              <Button
+                onClick={handleGenerateCard}
+                className="glow-button bg-dark w-100 mt-2 d-flex justify-content-center align-items-center instagram-btn gold-text"
+              >
+                <FaInstagram className="mt-3 me-4 gold-text" size={20} />
+                Seleziona frasi e <br />condividile nelle stories
+              </Button>
+            </div>
           </Col>
         </Row>
       </Container>

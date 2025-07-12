@@ -49,7 +49,7 @@ const dailyQuotes = [
     title: "You Are Not Alone"
   },
   {
-    text: "Tu, che sei diversa almeno tu nell'universo.",
+    text: "Tu, che sei diverso almeno tu nell'universo.",
     artist: "Mia Martini",
     title: "Almeno tu nell'universo"
   }
@@ -73,11 +73,6 @@ const dailyQuotes = [
   text: "La vita è un brivido che vola via, è tutto un equilibrio sopra la follia.",
   artist: "Vasco Rossi",
   title: "Sally"
-},
-{
-  text: "Ogni tanto penso a te, e mi manca il tuo respiro.",
-  artist: "Laura Pausini",
-  title: "Strani amori"
 }
 ,
 {
@@ -95,10 +90,16 @@ const dailyQuotes = [
   artist: "Oasis",
   title: "Wonderwall"
 },
+
 {
-  text: "Sono solo parole, e restano parole.",
+  text: "Sono solo parole, le nostre, sono solo parole.",
   artist: "Noemi",
   title: "Sono solo parole"
+},
+{
+  text: "Sono fuori di testa ma diverso da loro.",
+  artist: "Maneskin",
+  title: "Zitti e buoni "
 },
 {
   text: "E se domani io non potessi rivedere te…",

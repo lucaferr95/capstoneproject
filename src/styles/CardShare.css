@@ -1,0 +1,49 @@
+.card-preview {
+  background: radial-gradient(circle at top, #1d2977, #0c1026);
+  color: #ffd700;
+  font-family: "Fira Code", monospace;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  margin: 2rem auto;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.card-cover {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.lyric-text {
+  font-size: 22px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.card-meta {
+  margin-top: 28px;
+  color: #ccc;
+  font-size: 16px;
+}
+.card-content {
+  background-color: #1d2344;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  font-family: "Fira Code", monospace;
+  color: #ffd700;
+}
+
+.gold-text {
+  color: #ffd700;
+}
+.card-brand {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #888;
+  font-style: italic;
+}
