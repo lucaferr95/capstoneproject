@@ -12,7 +12,7 @@ const NewSongs = () => {
   const dispatch = useDispatch();
 
   const fetchData = async () => {
-    const artists = ['Alfa', 'Achille Lauro', 'Annalisa', 'Serena Brancale'];
+    const artists = ['Annalisa', 'Achille Lauro', 'Lazza', 'Serena Brancale'];
 
     const fetchPromises = artists.map(artist =>
       fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${artist}`)
