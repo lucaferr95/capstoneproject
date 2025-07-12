@@ -61,19 +61,19 @@ const MyNavbar = () => {
           {/* Colonna 2: Nav Links */}
           <Col xs={12} lg={6} className="mb-3 mb-lg-0">
             <Nav className="d-flex flex-column flex-lg-row gap-3 justify-content-center align-items-center">
-              <Nav.Link as={Link} to="/" className={`glow-button rounded-start-pill ${location.pathname === "/" ? "active" : ""} gold-text`}>
+              <Nav.Link as={Link} to="/" className={`glow-button rounded-start-pill bg-black bg-gradient ${location.pathname === "/" ? "active" : ""} gold-text`}>
                 Home
               </Nav.Link>
-              <Nav.Link as={Link} to="/novità" className={`glow-button ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
+              <Nav.Link as={Link} to="/novità" className={`glow-button bg-black bg-gradient ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
                 Novità
               </Nav.Link>
-              <Nav.Link as={Link} to="/favourites" className={`glow-button ${location.pathname === "/favourites" ? "active" : ""} gold-text`}>
+              <Nav.Link as={Link} to="/favourites" className={`glow-button bg-black bg-gradient ${location.pathname === "/favourites" ? "active" : ""} gold-text`}>
                 Testi preferiti
               </Nav.Link>
-              <Nav.Link as={Link} to="/" className={`glow-button ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
+              <Nav.Link as={Link} to="/" className={`glow-button bg-black bg-gradient ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
                 Quiz
               </Nav.Link>
-              <Nav.Link as={Link} to="/lascia-un-commento" className={`glow-button rounded-end-pill ${location.pathname === "/lascia-un-commento" ? "active" : ""} gold-text`}>
+              <Nav.Link as={Link} to="/lascia-un-commento" className={`glow-button bg-black bg-gradient rounded-end-pill ${location.pathname === "/lascia-un-commento" ? "active" : ""} gold-text`}>
                 Lascia un commento
               </Nav.Link>
             </Nav>
@@ -86,8 +86,8 @@ const MyNavbar = () => {
             <Form className="d-flex w-100 w-lg-auto" onSubmit={handleSearch}>
               <Form.Control
                 type="search"
-                placeholder="Cerca testi o artisti"
-                className="me-2 rounded glow-button gold-text"
+                placeholder="Cerca brani o artisti"
+                className="me-2 rounded glow-button gold-text bg-black bg-gradient"
                 aria-label="Search"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
