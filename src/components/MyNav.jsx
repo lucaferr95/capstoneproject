@@ -39,17 +39,22 @@ const MyNavbar = () => {
         <Row className="w-100 align-items-center text-center text-lg-start">
           
           {/* Colonna 1: Logo + Titolo */}
-          <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center gap-1 justify-content-center justify-content-lg-start mb-2 mb-lg-0">
-            <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center img.logo ms-2">
+          <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center gap-1 justify-content-center justify-content-lg-start mb-2 mb-lg-0 g-0">
+            <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center img.logo ms-2 ">
               <img
                 src="/assets/logo/logo fuori di testo 2.PNG"
                 alt="logo"
                 width="150"
-                className="mb-1"
+                className="mb-1 mx-2"
               />
-              <span className="eater text-white-75 bg-black opacity-75 ms-2" style={{ fontSize: "1.5rem" }}>
-                ©FUORI DI TESTO
-              </span>
+            <div className="app-title ">
+  <span className="script">Fuori di</span>
+  <span className="script">testo</span>
+
+</div>
+
+
+
             </Navbar.Brand>
           </Col>
 
