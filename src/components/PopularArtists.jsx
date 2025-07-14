@@ -6,17 +6,24 @@ import { useNavigate, Link } from 'react-router-dom';
 import QuoteOfTheDay from './QuoteOfTheDay';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import '../styles/Buttons.css';
+import MicRecorder from 'mic-recorder-to-mp3-fixed';
+
+
 
 const PopularArtists = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const favourites = useSelector(state => state.fav.list);
+  const isLoggedIn = !!localStorage.getItem("token");
 
   const [popularData, setPopularData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const isLoggedIn = !!localStorage.getItem("token");
+  const [listening, setListening] = useState(false);
+  const [recognizedSong, setRecognizedSong] = useState(null);
+
+  const recorder = new MicRecorder({ bitRate: 192 });
 
   const internationalArtists = ['Taylor Swift', 'The Weeknd', 'Drake', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
@@ -64,7 +71,6 @@ const PopularArtists = () => {
       setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
       return;
     }
-
     const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
     if (isAlreadyFavourite) {
       dispatch(removeFromFavouriteAction(song));
@@ -73,11 +79,95 @@ const PopularArtists = () => {
     }
   };
 
+  const startRecognition = async () => {
+    try {
+      setListening(true);
+      await recorder.start();
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      const [buffer, blob] = await recorder.stop().getMp3();
+      setListening(false);
+
+      const mp3File = new File([blob], "recorded-audio.mp3", { type: "audio/mpeg" });
+
+      const formData = new FormData();
+      formData.append("api_token", import.meta.env.VITE_AUDD_API_KEY);
+      formData.append("file", mp3File);
+      formData.append("return", "apple_music,deezer");
+
+      const response = await fetch("https://api.audd.io/", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.status === "success" && data.result) {
+        const { artist, title } = data.result;
+        setRecognizedSong({ artist, title });
+        setTimeout(() => setRecognizedSong(null), 10000); // scompare dopo 10s
+      } else {
+        setRecognizedSong(null);
+        alert("Brano non riconosciuto. Riprova con volume più alto.");
+      }
+    } catch (err) {
+      console.error("Errore nella registrazione o nel riconoscimento:", err);
+      setListening(false);
+      alert("Errore nel processo di registrazione. Controlla i permessi del microfono.");
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#ffffff', padding: '2rem' }}>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       <QuoteOfTheDay />
+
+      <div className="d-flex justify-content-center mt-2 mb-4 flex-column align-items-center">
+        {recognizedSong && (
+  <Alert variant="dark" className="gold-text mt-3 text-center bg-dark">
+    Brano riconosciuto: <strong>{recognizedSong.artist}</strong> – <strong>{recognizedSong.title}</strong>
+    <div className="mt-2">
+      <Button
+        className="glow-button bg-dark gold-text"
+        onClick={() =>
+          navigate(`/lyrics/${encodeURIComponent(recognizedSong.artist)}/${encodeURIComponent(recognizedSong.title)}`)
+        }
+      >
+        Vai al testo
+      </Button>
+    </div>
+  </Alert>
+)}
+
+        <Button
+          className="btn glow-button p-0 border-0"
+          onClick={startRecognition}
+          style={{
+            borderRadius: '50%',
+            width: '100px',
+            height: '100px',
+            overflow: 'hidden',
+            backgroundColor: '#000'
+          }}
+        >
+
+          <img
+            src="/assets/logo/logo fuori di testo 2.PNG"
+            alt="Logo"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </Button>
+
+        
+        
+
+        {listening ? (
+          <small className="text-warning mt-2 bg-black bg-gradient">Sto ascoltando…</small>
+        ) : (
+          <small className="gold-text mt-2 glow-button bg-black bg-gradient px-3 py-1 rounded">
+            Tocca il logo per identificare una canzone
+          </small>
+        )}
+      </div>
 
       {popularData.map((section, sectionIndex) => (
         <div key={sectionIndex} className="mb-5">
@@ -98,7 +188,6 @@ const PopularArtists = () => {
               <Row className="g-5">
                 {artistData.songs.slice(0, 4).map((song, idx) => {
                   const isFavourite = favourites.some(fav => fav.id === song.id);
-
                   return (
                     <Col md={3} key={idx}>
                       <Card className="bg-primary text-white border-0 gold-text">
@@ -106,10 +195,7 @@ const PopularArtists = () => {
                         <Card.Body>
                           <Card.Title>{song.title}</Card.Title>
                           <Card.Title>
-                            <Link
-                              to={`/search?q=${encodeURIComponent(song.artist.name)}`}
-                              className="text-decoration-none gold-text"
-                            >
+                            <Link to={`/search?q=${encodeURIComponent(song.artist.name)}`} className="text-decoration-none gold-text">
                               {song.artist.name}
                             </Link>
                           </Card.Title>
@@ -137,7 +223,8 @@ const PopularArtists = () => {
                               </>
                             )}
                           </Button>
-                                                {!isLoggedIn && errorMsg && (
+
+                          {!isLoggedIn && errorMsg && (
                             <Alert variant="danger" className="mt-2">
                               {errorMsg}
                             </Alert>
