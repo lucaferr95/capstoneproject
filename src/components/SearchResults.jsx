@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
@@ -11,8 +11,10 @@ const SearchResults = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const isLoggedIn = !!localStorage.getItem("token");
   const navigate = useNavigate();
   const favourites = useSelector(state => state.fav.list);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     if (!query) return;
@@ -35,13 +37,20 @@ const SearchResults = () => {
   }, [query]);
 
   const handleFavouriteClick = (song) => {
-    const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
-    if (isAlreadyFavourite) {
-      dispatch(removeFromFavouriteAction(song));
-    } else {
-      dispatch(addToFavouriteAction(song));
-    }
-  };
+      setErrorMsg('');
+  
+      if (!isLoggedIn) {
+        setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+        return;
+      }
+  
+      const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
+      if (isAlreadyFavourite) {
+        dispatch(removeFromFavouriteAction(song));
+      } else {
+        dispatch(addToFavouriteAction(song));
+      }
+    };
 
   return (
     <Container className="text-white mt-4 mb-4">
@@ -97,6 +106,11 @@ const SearchResults = () => {
                           </>
                         )}
                       </Button>
+                      {!isLoggedIn && errorMsg && (
+                        <Alert variant="danger" className="mt-2">
+                          {errorMsg}
+                        </Alert>
+                      )}
                     </div>
                   </Card.Body>
                 </Card>

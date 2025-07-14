@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,6 +10,8 @@ const NewSongs = () => {
   const [songsData, setSongsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const isLoggedIn = !!localStorage.getItem("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const favourites = useSelector(state => state.fav.list);
@@ -39,6 +41,13 @@ const NewSongs = () => {
   }, []);
 
   const handleFavouriteClick = (song) => {
+    setErrorMsg('');
+
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
+
     const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
     if (isAlreadyFavourite) {
       dispatch(removeFromFavouriteAction(song));
@@ -46,7 +55,6 @@ const NewSongs = () => {
       dispatch(addToFavouriteAction(song));
     }
   };
-
   return (
     <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", padding: "2rem" }}>
       <div className="d-flex justify-content-center mb-4">
@@ -55,6 +63,7 @@ const NewSongs = () => {
 
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
+     
 
       {songsData.map((artistData, index) => (
         <section key={index} className="mb-5 text-center">
@@ -108,6 +117,11 @@ const NewSongs = () => {
                           </>
                         )}
                       </Button>
+                      {!isLoggedIn && errorMsg && (
+  <Alert variant="danger" className="mt-2">
+    {errorMsg}
+  </Alert>
+)}
                     </Card.Body>
                   </Card>
                 </Col>

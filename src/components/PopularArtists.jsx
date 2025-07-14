@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
 import { useNavigate, Link } from 'react-router-dom';
@@ -15,6 +15,8 @@ const PopularArtists = () => {
   const [popularData, setPopularData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const isLoggedIn = !!localStorage.getItem("token");
 
   const internationalArtists = ['Taylor Swift', 'The Weeknd', 'Drake', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
@@ -58,8 +60,12 @@ const PopularArtists = () => {
   }, []);
 
   const handleFavouriteClick = (song) => {
-    const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
 
+    const isAlreadyFavourite = favourites.some(fav => fav.id === song.id);
     if (isAlreadyFavourite) {
       dispatch(removeFromFavouriteAction(song));
     } else {
@@ -71,7 +77,6 @@ const PopularArtists = () => {
     <div style={{ backgroundColor: '#ffffff', padding: '2rem' }}>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-
       <QuoteOfTheDay />
 
       {popularData.map((section, sectionIndex) => (
@@ -132,6 +137,11 @@ const PopularArtists = () => {
                               </>
                             )}
                           </Button>
+                                                {!isLoggedIn && errorMsg && (
+                            <Alert variant="danger" className="mt-2">
+                              {errorMsg}
+                            </Alert>
+                          )}
                         </Card.Body>
                       </Card>
                     </Col>
