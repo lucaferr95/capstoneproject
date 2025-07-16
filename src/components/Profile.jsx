@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 const Profile = () => {
   // Recupera il token JWT dal localStorage per autenticazione
   const token = localStorage.getItem("token");
+  const [avatar, setAvatar] = useState(localStorage.getItem("avatar"));
+
     // Reference per il campo input file (usato per avatar)
   const avatarInputRef = useRef();
   const [formData, setFormData] = useState({
@@ -103,6 +105,8 @@ const Profile = () => {
 
     const form = new FormData();
     form.append("file", file);
+    console.log("Token per upload:", token);
+
 
     fetch("http://localhost:8080/users/me/avatar", {
       method: "PATCH",

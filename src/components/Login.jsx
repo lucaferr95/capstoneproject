@@ -4,21 +4,15 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import '../styles/Login.css';
 
-
-
-
-
-// Hook riutilizzato per effetto scrittura
+// ✨ Hook per effetto di scrittura
 const useTypingEffect = (text, speed = 40) => {
   const [displayedText, setDisplayedText] = useState('');
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     let i = 0;
     const timer = setInterval(() => {
       if (i < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(i));
+        setDisplayedText(prev => prev + text.charAt(i));
         i++;
       } else {
         clearInterval(timer);
@@ -34,20 +28,19 @@ const useTypingEffect = (text, speed = 40) => {
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [data, setData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
-  const welcomeText = `Giià registrato? Accedi pure.
-  Ti dò il permesso...
-   (Almeno per oggi ehehe)`;
+  const welcomeText = `Giià registrato? Accedi pure.\nTi dò il permesso...\n(Almeno per oggi ehehe)`;
   const typedMessage = useTypingEffect(welcomeText, 40);
 
-  // Gestione invio form di login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
+      // 🔐 Login: ottieni il token
       const response = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -58,12 +51,25 @@ const Login = () => {
 
       const token = await response.text();
       localStorage.setItem('token', token);
-      localStorage.setItem('username', data.username); // Salva username al login
 
-      // Recupera preferiti dell’utente e aggiorna Redux
-      const userFavs = JSON.parse(localStorage.getItem(`favourites_${data.username}`)) || [];
+      // 👤 Recupera info utente
+      const userRes = await fetch('http://localhost:8080/auth/me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const userData = await userRes.json();
+      console.log("Dati utente:", userData);
+
+      localStorage.setItem("avatar", userData.avatar || "/assets/avatar/default.png");
+      localStorage.setItem("username", userData.username);
+
+      // ⭐ Carica preferiti da localStorage
+      const userFavs = JSON.parse(localStorage.getItem(`favourites_${userData.username}`)) || [];
       dispatch({ type: 'RESET_FAVOURITES', payload: userFavs });
 
+      // 🚀 Vai alla home
       navigate('/');
     } catch (err) {
       setError('Login fallito: ' + err.message);
