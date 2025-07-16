@@ -18,7 +18,7 @@ const NewSongs = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const artists = ['Annalisa', 'Achille Lauro', 'Lazza', 'Serena Brancale'];
+      const artists = ['Annalisa ', 'Achille Lauro', 'Pinguini Tattici Nucleari', 'Serena Brancale'];
 
       try {
         const fetchPromises = artists.map(artist =>

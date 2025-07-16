@@ -20,6 +20,7 @@ import Register from './components/Register.jsx';
 import NotFound from './components/NotFound.jsx';
 import DiconoDiNoi from './components/DiconoDiNoi.jsx';
 import FeedbackForm from './components/FeedbackForm.jsx';
+import Profile from './components/Profile.jsx';
 
 const App = () => {
   return (
@@ -40,7 +41,7 @@ const App = () => {
               <Route path="/search" element={<SearchResults />} />
               <Route path="/dicono-di-noi" element={<DiconoDiNoi />} />
               <Route path="/lascia-un-commento" element={<FeedbackForm />} />
-              
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

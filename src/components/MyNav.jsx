@@ -2,15 +2,19 @@ import { Navbar, Container, Nav, NavDropdown, Form, Row, Col } from "react-boots
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import '../styles/Navbar.css'
+import '../styles/Navbar.css';
 import '../styles/Buttons.css';
-
 
 const MyNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const avatar = useSelector(state => state.user?.avatarUrl) || "/assets/avatar/default.png";
+  // Recupera avatar da localStorage o fallback al default
+  const avatar = localStorage.getItem("avatar");
+  const avatarSrc = avatar && avatar !== "null"
+    ? avatar
+    : "/assets/avatar/default.png";
+
   const [searchValue, setSearchValue] = useState('');
 
   // Verifica se l'utente è autenticato (token presente)
@@ -27,10 +31,11 @@ const MyNavbar = () => {
 
   // Funzione per il logout
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Rimuove token dal localStorage
-    navigate("/login");              // Reindirizza alla login
-    localStorage.removeItem("username");
-    dispatch({ type: 'RESET_FAVOURITES', payload: [] });
+    localStorage.removeItem("token");           // Rimuove token dal localStorage
+    localStorage.removeItem("username");        // Rimuove username
+    localStorage.removeItem("avatar");          // Rimuove avatar
+    navigate("/login");                         // Reindirizza alla login
+    dispatch({ type: 'RESET_FAVOURITES', payload: [] }); // Resetta preferiti
   };
 
   return (
@@ -40,21 +45,17 @@ const MyNavbar = () => {
           
           {/* Colonna 1: Logo + Titolo */}
           <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center gap-1 justify-content-center justify-content-lg-start mb-2 mb-lg-0 g-0">
-            <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center img.logo ms-2 ">
+            <Navbar.Brand as={Link} to="/" className="d-flex flex-column flex-lg-row align-items-center img.logo ms-2">
               <img
                 src="/assets/logo/logo fuori di testo 2.PNG"
                 alt="logo"
                 width="150"
                 className="mb-1 mx-2"
               />
-            <div className="app-title ">
-  <span className="script">Fuori di</span>
-  <span className="script">testo</span>
-
-</div>
-
-
-
+              <div className="app-title">
+                <span className="script">Fuori di</span>
+                <span className="script">testo</span>
+              </div>
             </Navbar.Brand>
           </Col>
 
@@ -82,7 +83,7 @@ const MyNavbar = () => {
           {/* Colonna 3: Search + Avatar + Menu */}
           <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end gap-3">
             
-            {/*Barra di ricerca */}
+            {/* Barra di ricerca */}
             <Form className="d-flex w-100 w-lg-auto" onSubmit={handleSearch}>
               <Form.Control
                 type="search"
@@ -98,7 +99,7 @@ const MyNavbar = () => {
             <NavDropdown
               title={
                 <img
-                  src={avatar}
+                  src={avatarSrc}
                   alt="Avatar utente"
                   width="50"
                   height="50"
@@ -109,11 +110,11 @@ const MyNavbar = () => {
               id="profileDropdown"
               align="end"
             >
-              <NavDropdown.Item as={Link} to="/profilo" className="gold-text">
+              <NavDropdown.Item as={Link} to="/profile" className="gold-text">
                 Profilo
               </NavDropdown.Item>
 
-              {/*Mostra Login/Registrati solo se l'utente NON è loggato */}
+              {/* Mostra Login/Registrati solo se l'utente NON è loggato */}
               {!isLoggedIn && (
                 <>
                   <NavDropdown.Item as={Link} to="/login" className="gold-text">
@@ -134,7 +135,7 @@ const MyNavbar = () => {
 
               <NavDropdown.Divider />
 
-              {/*Mostra Logout solo se l'utente è loggato */}
+              {/* Mostra Logout solo se l'utente è loggato */}
               {isLoggedIn && (
                 <NavDropdown.Item href="#" className="gold-text" onClick={handleLogout}>
                   Logout
