@@ -61,24 +61,72 @@ const MyNavbar = () => {
 
           {/* Colonna 2: Nav Links */}
           <Col xs={12} lg={6} className="mb-3 mb-lg-0">
-            <Nav className="d-flex flex-column flex-lg-row gap-3 justify-content-center align-items-center">
-              <Nav.Link as={Link} to="/" className={`glow-button rounded-start-pill bg-black bg-gradient ${location.pathname === "/" ? "active" : ""} gold-text`}>
-                Home
-              </Nav.Link>
-              <Nav.Link as={Link} to="/novità" className={`glow-button bg-black bg-gradient ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
-                Novità
-              </Nav.Link>
-              <Nav.Link as={Link} to="/favourites" className={`glow-button bg-black bg-gradient ${location.pathname === "/favourites" ? "active" : ""} gold-text`}>
-                Testi preferiti
-              </Nav.Link>
-              <Nav.Link as={Link} to="/" className={`glow-button bg-black bg-gradient ${location.pathname === "/novità" ? "active" : ""} gold-text`}>
-                Quiz
-              </Nav.Link>
-              <Nav.Link as={Link} to="/lascia-un-commento" className={`glow-button bg-black bg-gradient rounded-end-pill ${location.pathname === "/lascia-un-commento" ? "active" : ""} gold-text`}>
-                Lascia un commento
-              </Nav.Link>
-            </Nav>
-          </Col>
+  <Nav className="d-flex flex-column flex-lg-row gap-3 justify-content-center align-items-center">
+    {/* Home — con bordo solo su desktop */}
+    <Nav.Link
+      as={Link}
+      to="/"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/" ? "active" : ""} rounded-start-pill d-none d-sm-inline-block`}
+    >
+      Home
+    </Nav.Link>
+
+    {/* Versione mobile di Home senza pill */}
+    <Nav.Link
+      as={Link}
+      to="/"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/" ? "active" : ""} d-sm-none`}
+    >
+      Home
+    </Nav.Link>
+
+    {/* Novità */}
+    <Nav.Link
+      as={Link}
+      to="/novità"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/novità" ? "active" : ""}`}
+    >
+      Novità
+    </Nav.Link>
+
+    {/* Testi preferiti */}
+    <Nav.Link
+      as={Link}
+      to="/favourites"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/favourites" ? "active" : ""}`}
+    >
+      Testi preferiti
+    </Nav.Link>
+
+    {/* Quiz */}
+    <Nav.Link
+      as={Link}
+      to="/quiz"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/quiz" ? "active" : ""}`}
+    >
+      Quiz
+    </Nav.Link>
+
+    {/* Lascia un commento — desktop con bordo */}
+    <Nav.Link
+      as={Link}
+      to="/lascia-un-commento"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/lascia-un-commento" ? "active" : ""} rounded-end-pill d-none d-sm-inline-block`}
+    >
+      Lascia un commento
+    </Nav.Link>
+
+    {/* Mobile senza pill */}
+    <Nav.Link
+      as={Link}
+      to="/lascia-un-commento"
+      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/lascia-un-commento" ? "active" : ""} d-sm-none`}
+    >
+      Lascia un commento
+    </Nav.Link>
+  </Nav>
+</Col>
+
 
           {/* Colonna 3: Search + Avatar + Menu */}
           <Col xs={12} lg={3} className="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end gap-3">

@@ -76,3 +76,9 @@ img.logo {
   display: block;
   text-shadow: 0 0 6px #ffffff; /* glow bianco soft */
 }
+
+@media (max-width: 576px) {
+  .remove-rounded-mobile {
+    border-radius: 0 !important;
+  }
+}
