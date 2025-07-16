@@ -85,7 +85,7 @@ Sei pronto a registrarti?`;
             <div className="form-container">
               <h2 className='gold-text'>Registrati</h2>
               <form onSubmit={handleSubmit}>
-                {['nome', 'cognome', 'username', 'email', 'password'].map((field) => (
+                {['nome', 'cognome', 'username (min 4 caratteri)', 'email', 'password (min 4 caratteri)'].map((field) => (
                   <div className="input-group" key={field}>
                     <input
                       type={field === 'email' ? 'email' : field === 'password' ? 'password' : 'text'}
