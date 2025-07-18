@@ -1,9 +1,12 @@
 import { Navbar, Container, Nav, NavDropdown, Form, Row, Col } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector,  } from "react-redux";
 import { useState } from "react";
 import '../styles/Navbar.css';
 import '../styles/Buttons.css';
+import { useEffect } from "react";
+import { useDispatch } from 'react-redux';
+
 
 const MyNavbar = () => {
   const location = useLocation();
@@ -19,6 +22,9 @@ const MyNavbar = () => {
 
   // Verifica se l'utente è autenticato (token presente)
   const isLoggedIn = !!localStorage.getItem("token");
+
+ const [role, setRole] = useState(localStorage.getItem("role"));
+
 
   // 🔎 Funzione per gestire la ricerca
   const handleSearch = (e) => {
@@ -37,6 +43,12 @@ const MyNavbar = () => {
     navigate("/login");                         // Reindirizza alla login
     dispatch({ type: 'RESET_FAVOURITES', payload: [] }); // Resetta preferiti
   };
+
+  useEffect(() => {
+  const savedRole = localStorage.getItem("role");
+  setRole(savedRole);
+}, [location]);
+
 
   return (
     <Navbar expand="lg" className="bg-black border-bottom border-body py-2" data-bs-theme="dark">
@@ -143,7 +155,7 @@ const MyNavbar = () => {
               />
             </Form>
 
-            {/* 👤 Avatar + Dropdown utente */}
+            {/* Avatar + Dropdown utente */}
             <NavDropdown
               title={
                 <img
@@ -174,9 +186,14 @@ const MyNavbar = () => {
                 </>
               )}
 
-              <NavDropdown.Item href="#" className="gold-text">
-                Settings
-              </NavDropdown.Item>
+              {role === "ADMIN" && (
+  <NavDropdown.Item as={Link} to="/backoffice" className="gold-text">
+    Backoffice
+  </NavDropdown.Item>
+)}
+
+
+
               <NavDropdown.Item href="https://www.paypal.com/paypalme/lucaf95" className="gold-text">
                 Sostieni il progetto
               </NavDropdown.Item>

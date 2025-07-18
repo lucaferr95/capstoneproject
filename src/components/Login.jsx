@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import '../styles/Login.css';
 
-// ✨ Hook per effetto di scrittura
+// Hook per effetto di scrittura
 const useTypingEffect = (text, speed = 40) => {
   const [displayedText, setDisplayedText] = useState('');
 
@@ -40,7 +40,7 @@ const Login = () => {
     setError('');
 
     try {
-      // 🔐 Login: ottieni il token
+      // Login: ottieni il token
       const response = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -52,7 +52,7 @@ const Login = () => {
       const token = await response.text();
       localStorage.setItem('token', token);
 
-      // 👤 Recupera info utente
+      // Recupera info utente
       const userRes = await fetch('http://localhost:8080/auth/me', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -64,12 +64,17 @@ const Login = () => {
 
       localStorage.setItem("avatar", userData.avatar || "/assets/avatar/default.png");
       localStorage.setItem("username", userData.username);
+      localStorage.setItem("role", userData.userType); // se il backend restituisce userType
+      console.log("Ruolo ricevuto al login:", userData.userType);
 
-      // ⭐ Carica preferiti da localStorage
+
+
+
+      //  Carica preferiti da localStorage
       const userFavs = JSON.parse(localStorage.getItem(`favourites_${userData.username}`)) || [];
       dispatch({ type: 'RESET_FAVOURITES', payload: userFavs });
 
-      // 🚀 Vai alla home
+      // Vai alla home
       navigate('/');
     } catch (err) {
       setError('Login fallito: ' + err.message);
