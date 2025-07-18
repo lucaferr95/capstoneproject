@@ -24,6 +24,8 @@ import Profile from './components/Profile.jsx';
 import Backoffice from './components/Backoffice.jsx';
 
 import { Navigate } from 'react-router-dom';
+import QuizRules from './components/QuizRules.jsx';
+import DailyQuiz from './components/DailyQuiz.jsx';
 
 const AdminRoute = ({ children }) => {
   const role = localStorage.getItem("role");
@@ -49,6 +51,9 @@ const App = () => {
               <Route path="/search" element={<SearchResults />} />
               <Route path="/dicono-di-noi" element={<DiconoDiNoi />} />
               <Route path="/lascia-un-commento" element={<FeedbackForm />} />
+              <Route path="/regole" element={<QuizRules />} />
+<Route path="/Daylyquiz" element={<DailyQuiz />} />
+
               <Route path="/profile" element={<Profile />} /><Route path="/backoffice" element={
   <AdminRoute>
     <Backoffice />

@@ -113,7 +113,7 @@ const MyNavbar = () => {
     {/* Quiz */}
     <Nav.Link
       as={Link}
-      to="/quiz"
+      to="/regole"
       className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/quiz" ? "active" : ""}`}
     >
       Quiz

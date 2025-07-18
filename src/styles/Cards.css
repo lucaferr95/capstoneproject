@@ -1,17 +1,15 @@
 .bubble-card {
   border-radius: 20px;
-  background-color: #2f9313;
   padding: 1rem;
   color: gold;
   position: relative;
 }
 
-.bubble-card::after {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  left: 30px;
-  border-width: 15px 15px 0;
-  border-style: solid;
-  border-color: #0d6efd transparent;
+/* Sfondo blu: puoi usare Bootstrap con bg-primary + bg-gradient oppure aggiungere direttamente */
+.bubble-card.bg-primary {
+  background-color: #0d6efd;
+}
+
+.gold-text {
+  color: gold;
 }
