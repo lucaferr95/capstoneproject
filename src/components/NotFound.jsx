@@ -7,14 +7,14 @@ const NotFound = () => {
 
   return (
     
-    <Container fluid className="text-center mt-0 bg-primary h-100 py-5 gold-text">
+    <Container fluid className="text-center mt-0 bg-primary h-100 py-5 mt-3 mb-3 gold-text">
       <h2 className='text-white'>Dove pensavi di andare, bro?</h2>
    
 <img
   src="https://pbs.twimg.com/tweet_video_thumb/DQjlHWeWAAEL4wL.jpg"
   alt="Errore"
-  className="img-fluid my-3"
-  style={{ maxWidth: '500px' }}
+  className="img-fluid me-5 my-2" 
+  style={{ maxWidth: '400px' }}
 />
 <p>Vuoi tornare in <Link to="/" className='gold-text'>HOME </Link>? <br /> (Lesto, prima che Gigio si incazzi)</p>
 
