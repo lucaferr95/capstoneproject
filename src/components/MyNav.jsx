@@ -87,7 +87,7 @@ const MyNavbar = () => {
     <Nav.Link
       as={Link}
       to="/"
-      className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/" ? "active" : ""} d-sm-none`}
+      className={`glow-button bg-black bg-gradient gold-text  ${location.pathname === "/" ? "active" : ""} d-sm-none`}
     >
       Home
     </Nav.Link>
@@ -98,7 +98,7 @@ const MyNavbar = () => {
       to="/novità"
       className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/novità" ? "active" : ""}`}
     >
-      Novità
+      Nuove uscite
     </Nav.Link>
 
     {/* Testi preferiti */}
@@ -107,7 +107,7 @@ const MyNavbar = () => {
       to="/favourites"
       className={`glow-button bg-black bg-gradient gold-text ${location.pathname === "/favourites" ? "active" : ""}`}
     >
-      Testi preferiti
+      Brani preferiti
     </Nav.Link>
 
     {/* Quiz */}
