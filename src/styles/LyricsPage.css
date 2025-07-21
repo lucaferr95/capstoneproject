@@ -80,7 +80,7 @@
   background-color: #c13584;
 }
 ::selection {
+  background-color: #ed39bd;
   color: #ffffff;
   text-decoration: underline;
-  margin-top: 2rem;
 }

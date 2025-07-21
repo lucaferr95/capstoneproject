@@ -28,14 +28,21 @@ const useTypingEffect = (text, speed = 40) => {
 
 const Register = () => {
   const navigate = useNavigate();
+ const [data, setData] = useState({
+  nome: '',
+  cognome: '',
+  username: '',
+  email: '',
+  password: ''
+});
 
-  const [data, setData] = useState({
-    nome: '',
-    cognome: '',
-    username: '',
-    email: '',
-    password: ''
-  });
+  const fields = [
+  { key: 'nome', label: 'Nome' },
+  { key: 'cognome', label: 'Cognome' },
+  { key: 'username', label: 'Username (min 4 caratteri)' },
+  { key: 'email', label: 'Email' },
+  { key: 'password', label: 'Password (min 4 caratteri)' },
+];
 
   const welcomeText = `Beenvenuto/a utente da Luca (o dalla sua essenza digitale)
 nella magnifica app creata da me medesimo (o dalla mia essenza reale).
@@ -85,18 +92,19 @@ Sei pronto a registrarti?`;
             <div className="form-container">
               <h2 className='gold-text'>Registrati</h2>
               <form onSubmit={handleSubmit}>
-                {['nome', 'cognome', 'username (min 4 caratteri)', 'email', 'password (min 4 caratteri)'].map((field) => (
-                  <div className="input-group" key={field}>
-                    <input
-                      type={field === 'email' ? 'email' : field === 'password' ? 'password' : 'text'}
-                      required
-                      placeholder=" "
-                      value={data[field]}
-                      onChange={(e) => setData({ ...data, [field]: e.target.value })}
-                    />
-                    <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-                  </div>
-                ))}
+                {fields.map(({ key, label }) => (
+  <div className="input-group" key={key}>
+    <input
+      type={key === 'email' ? 'email' : key === 'password' ? 'password' : 'text'}
+      required
+      placeholder=" "
+      value={data[key] || ''}
+      onChange={(e) => setData({ ...data, [key]: e.target.value })}
+    />
+    <label>{label}</label>
+  </div>
+))}
+
 
                 <button type="submit" className='gold-text mb-2'>Registrati</button>
 

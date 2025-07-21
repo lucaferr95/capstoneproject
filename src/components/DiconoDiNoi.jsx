@@ -13,6 +13,7 @@ const DiconoDiNoi = () => {
       const res = await fetch("http://localhost:8080/api/feedback");
       const data = await res.json();
       setComments(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+     console.log("Feedback ricevuti:", data);
 
       setLoading(false);
 

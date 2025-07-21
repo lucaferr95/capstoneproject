@@ -35,23 +35,28 @@ const BadgePage = () => {
   const unlockedBadges = badges.map((b) => ({
     ...b,
     unlocked: points >= b.requiredPoints
-  }));
-
-  // Sincronizza Redux dai punti salvati localmente
-  useEffect(() => {
-    const saved = localStorage.getItem(`points_${userId}`);
-    const parsed = parseInt(saved || "0");
-
-    if (parsed > 0 && points !== parsed) {
-      dispatch(setPointsForUser(userId, parsed));
-      console.log(`🔄 Sincronizzo punti: ${parsed} per ${userId}`);
-    }
-  }, [dispatch, userId, points]);
-
+  }))
   // Salva i punti sempre nel localStorage aggiornato
   useEffect(() => {
     localStorage.setItem(`points_${userId}`, points.toString());
   }, [userId, points]);
+  //Chiamata fetch per backend
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  fetch("http://localhost:8080/punti/totali", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(res => res.json())
+    .then(total => {
+      dispatch(setPointsForUser(userId, total));
+      console.log("✨ Punti totali ricevuti:", total);
+    })
+    .catch(err => console.error("Errore nel fetch totale punti:", err));
+}, [dispatch, userId]);
+
 
   // Badge appena sbloccato → popup visivo
   useEffect(() => {

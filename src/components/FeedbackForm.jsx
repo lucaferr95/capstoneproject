@@ -33,7 +33,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <Container className="mt-5 feedback bg-black bg-gradient p-3 gold-text p-5 mt-0">
+    <Container className="mt-4 mb-4 feedback bg-black bg-gradient p-3 gold-text p-5 mt-0">
       <h3 className="gold-text text-center">Lascia un commento</h3>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="comment">

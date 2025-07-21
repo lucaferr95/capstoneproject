@@ -71,7 +71,7 @@ const Backoffice = () => {
 
 
   return (
-    <Container className="mt-4 px-4 py-3 rounded-4 bg-black bg-gradient border border-warning">
+    <Container className="mt-4 px-4 mb-4 py-3 rounded-4 bg-black bg-gradient border border-warning">
       <h2 className="text-center gold-text pt-2">Gestione Feedback Admin</h2>
 
       {loading ? (
