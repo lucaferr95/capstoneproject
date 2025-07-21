@@ -1,4 +1,5 @@
 import { Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import "../styles/Cards.css"; // importa gli stili bubble-card
 const ResultScreen = ({ score }) => {
   return (

@@ -61,6 +61,8 @@ const Login = () => {
 
       const userData = await userRes.json();
       console.log("Dati utente:", userData);
+      localStorage.setItem("userId", userData.id);
+
 
       localStorage.setItem("avatar", userData.avatar || "/assets/avatar/default.png");
       localStorage.setItem("username", userData.username);

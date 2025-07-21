@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 const MyNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+ const dispatch=useDispatch
   // Recupera avatar da localStorage o fallback al default
   const avatar = localStorage.getItem("avatar");
   const avatarSrc = avatar && avatar !== "null"
@@ -157,56 +157,65 @@ const MyNavbar = () => {
 
             {/* Avatar + Dropdown utente */}
             <NavDropdown
-              title={
-                <img
-                  src={avatarSrc}
-                  alt="Avatar utente"
-                  width="50"
-                  height="50"
-                  className="rounded-circle border border-light"
-                  style={{ objectFit: "cover" }}
-                />
-              }
-              id="profileDropdown"
-              align="end"
-            >
-              <NavDropdown.Item as={Link} to="/profile" className="gold-text">
-                Profilo
-              </NavDropdown.Item>
+  title={
+    <img
+      src={avatarSrc}
+      alt="Avatar utente"
+      width="50"
+      height="50"
+      className="rounded-circle border border-light "
+      style={{ objectFit: "cover" }}
+    />
+  }
+  id="profileDropdown"
+  align="end"
+>
+  {/* Mostra Login/Registrati solo se l'utente NON è loggato */}
+  {!isLoggedIn && (
+    <>
+      <NavDropdown.Item as={Link} to="/login" className="gold-text">
+        Login
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/register" className="gold-text">
+        Registrati
+      </NavDropdown.Item>
+    </>
+  )}
 
-              {/* Mostra Login/Registrati solo se l'utente NON è loggato */}
-              {!isLoggedIn && (
-                <>
-                  <NavDropdown.Item as={Link} to="/login" className="gold-text">
-                    Login
-                  </NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/register" className="gold-text">
-                    Registrati
-                  </NavDropdown.Item>
-                </>
-              )}
+  {/* Mostra contenuti solo se loggato */}
+  {isLoggedIn && (
+    <>
+      <NavDropdown.Item as={Link} to="/profile" className="gold-text">
+        Profilo
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/badge" className="gold-text">
+        Badge
+      </NavDropdown.Item>
 
-              {role === "ADMIN" && (
-  <NavDropdown.Item as={Link} to="/backoffice" className="gold-text">
-    Backoffice
-  </NavDropdown.Item>
-)}
+      {/* Sostieni il progetto */}
+      <NavDropdown.Item
+        href="https://www.paypal.com/paypalme/lucaf95"
+        className="gold-text"
+      >
+        Sostieni il progetto
+      </NavDropdown.Item>
 
+      {/* Mostra Backoffice solo se utente è ADMIN */}
+      {role === "ADMIN" && (
+        <NavDropdown.Item as={Link} to="/backoffice" className="gold-text">
+          Backoffice
+        </NavDropdown.Item>
+      )}
 
+      <NavDropdown.Divider />
 
-              <NavDropdown.Item href="https://www.paypal.com/paypalme/lucaf95" className="gold-text">
-                Sostieni il progetto
-              </NavDropdown.Item>
+      <NavDropdown.Item href="#" className="gold-text" onClick={handleLogout}>
+        Logout
+      </NavDropdown.Item>
+    </>
+  )}
+</NavDropdown>
 
-              <NavDropdown.Divider />
-
-              {/* Mostra Logout solo se l'utente è loggato */}
-              {isLoggedIn && (
-                <NavDropdown.Item href="#" className="gold-text" onClick={handleLogout}>
-                  Logout
-                </NavDropdown.Item>
-              )}
-            </NavDropdown>
           </Col>
         </Row>
       </Container>

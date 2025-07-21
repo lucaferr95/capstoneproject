@@ -1,0 +1,198 @@
+/* Sezione badge */
+.badge-section {
+  background-color: black;
+  background-image: linear-gradient(to bottom right, #000, #1a1a1a);
+  color: #fff;
+  padding: 30px;
+  text-align: center;
+}
+
+/* Indicatore punti */
+.points-indicator {
+  margin-bottom: 30px;
+}
+
+.points-indicator label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.points-indicator progress {
+  width: 100%;
+  height: 12px;
+  appearance: none;
+  accent-color: #007bff;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #222;
+  transition: width 0.4s ease;
+}
+
+/* Griglia dei badge */
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  max-width: 900px;
+  margin: 0 auto;
+  gap: 30px;
+}
+
+/* Card singolo badge */
+.badge-card {
+  background: linear-gradient(145deg, #002aff, #1e3ff0);
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.3s ease;
+}
+
+.badge-card:hover {
+  transform: scale(1.06) rotate(-1deg);
+}
+
+/* Stato badge sbloccato */
+.badge-card.active {
+  border-color: gold;
+  box-shadow: 5 5 14px gold;
+}
+
+/* Stato badge bloccato */
+.blurred {
+  filter: grayscale(100%) brightness(70%);
+  opacity: 0.6;
+  transition: filter 0.3s ease;
+}
+
+.lock-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 8px;
+  color: gold;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+/* Medaglietta */
+.badge-medal {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #007bff, #001f4d);
+  border: 3px solid #e4da2b;
+  overflow: hidden;
+  margin: 0 auto 10px;
+}
+
+/* Foto dentro medaglietta */
+.badge-medal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Titolo badge */
+.badge-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 6px 0 2px;
+}
+
+/* Nome artista */
+.badge-artist {
+  font-size: 0.85rem;
+  color: #eacf23;
+}
+
+/* Guadagna punti + bottone */
+.earn-points {
+  margin-top: 50px;
+}
+
+.earn-points h5 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.earn-points button {
+  background-color: transparent;
+  color: gold;
+  border: 2px solid gold;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 10px gold;
+  transition: all 0.3s ease;
+}
+
+.earn-points button:hover {
+  background-color: gold;
+  color: black;
+}
+.badge-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge-popup-card {
+  background: #1c1c1c;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  animation: fadeScale 0.6s ease-out;
+  max-width: 300px;
+}
+
+.badge-popup-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+.animate-unlock {
+  animation: bounceUp 0.6s ease-out;
+}
+
+@keyframes bounceUp {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeScale {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
