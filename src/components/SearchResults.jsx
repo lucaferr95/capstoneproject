@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Spinner, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToFavouriteAction } from './Redux/Action';
+import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { addPoints } from "../components/Redux/Action/setPoint";
 
@@ -70,18 +70,18 @@ const SearchResults = () => {
   
   // Aggiunta ai preferiti e gestione punti
   const handleFavouriteClick = (song) => {
-    setErrorMsg("");
-
     if (!isLoggedIn) {
       setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
       return;
     }
-
+  
     const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-
-    if (!isAlreadyFavourite) {
+  
+    if (isAlreadyFavourite) {
+      dispatch(removeFromFavouriteAction(song));
+    } else {
       dispatch(addToFavouriteAction(song));
-
+  
       if (canEarnPoints()) {
         dispatch(addPoints(POINTS_AMOUNT));
         setRecentlyAwardedId(song.id);
@@ -92,6 +92,7 @@ const SearchResults = () => {
       }
     }
   };
+  
 
   return (
     <Container className="text-white mt-4 mb-4">

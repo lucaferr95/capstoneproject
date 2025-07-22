@@ -28,7 +28,7 @@ const NewSongs = () => {
   const POINTS_DATE_KEY = "favourite_points_date";
   const POINTS_COUNT_KEY = "favourite_points_count";
 
-  // Funzione per controllare se l'utente può ancora guadagnare punti oggi
+  // Funzione per controllare se l'utente può ancora guadagnare punti(5 punti x max 4 volte)
   const canEarnPoints = () => {
     const today = new Date().toISOString().slice(0, 10); // formato 'YYYY-MM-DD'
     const lastDate = localStorage.getItem(POINTS_DATE_KEY);
@@ -48,9 +48,10 @@ const NewSongs = () => {
     return true;
   };
 
-  // Recupero dei dati artistici da Deezer
+  // Recupero dei dati da Deezer
   useEffect(() => {
     const fetchData = async () => {
+      //inserisco 4 artisti per la sez nuove uscite
       const artists = ["Annalisa", "Achille Lauro", "Pinguini Tattici Nucleari", "Serena Brancale"];
 
       try {
@@ -75,18 +76,18 @@ const NewSongs = () => {
 
   // Aggiunta ai preferiti e gestione punti
   const handleFavouriteClick = (song) => {
-    setErrorMsg("");
-
     if (!isLoggedIn) {
       setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
       return;
     }
-
+  
     const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-
-    if (!isAlreadyFavourite) {
+  
+    if (isAlreadyFavourite) {
+      dispatch(removeFromFavouriteAction(song));
+    } else {
       dispatch(addToFavouriteAction(song));
-
+  
       if (canEarnPoints()) {
         dispatch(addPoints(POINTS_AMOUNT));
         setRecentlyAwardedId(song.id);
@@ -97,6 +98,7 @@ const NewSongs = () => {
       }
     }
   };
+  
 
   return (
     <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", padding: "2rem" }}>

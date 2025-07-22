@@ -22,7 +22,7 @@ const MyFooter = () => {
           </Col>
         </Row>
 
-        <Row className="text-center gy-2 small gold-text">
+        <Row className="text-center gy-2 small gold-text pb-3">
           <Col xs={12} md="auto" className='text-white'>
             <a href="#" className="gold-text-decoration-none">Condizioni dei servizi internet</a>
           </Col>
