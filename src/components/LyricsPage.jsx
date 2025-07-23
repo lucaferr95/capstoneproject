@@ -17,7 +17,6 @@ const LyricsPage = () => {
   const { artist, title } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const favourites = useSelector((state) => state.fav.list);
 
   const [lyrics, setLyrics] = useState('');
@@ -25,7 +24,6 @@ const LyricsPage = () => {
   const [songData, setSongData] = useState(null);
   const [highlightedText, setHighlightedText] = useState('');
 
-  // Utente evidenzia manualmente il testo
   const handleGenerateCard = () => {
     const selectedText = window.getSelection().toString().trim();
     if (selectedText) {
@@ -33,32 +31,30 @@ const LyricsPage = () => {
     }
   };
 
-  // Esporta la card come immagine
   const exportCardAsImage = () => {
-  const cardElement = document.getElementById('card-to-export');
-  if (!cardElement) return;
+    const cardElement = document.getElementById('card-to-export');
+    if (!cardElement) return;
 
-  const img = cardElement.querySelector('img');
-  if (img && !img.complete) {
-    img.onload = () => {
-      html2canvas(cardElement, { useCORS: true }).then((canvas) => {
-        const link = document.createElement('a');
-        link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-      });
-    };
-    return;
-  }
+    const img = cardElement.querySelector('img');
+    if (img && !img.complete) {
+      img.onload = () => {
+        html2canvas(cardElement, { useCORS: true }).then((canvas) => {
+          const link = document.createElement('a');
+          link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
+          link.href = canvas.toDataURL();
+          link.click();
+        });
+      };
+      return;
+    }
 
-  html2canvas(cardElement, { useCORS: true }).then((canvas) => {
-    const link = document.createElement('a');
-    link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-  });
-};
-
+    html2canvas(cardElement, { useCORS: true }).then((canvas) => {
+      const link = document.createElement('a');
+      link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  };
 
   const isFavourite =
     songData && favourites.some((fav) => fav.id === songData.id);
@@ -78,10 +74,10 @@ const LyricsPage = () => {
           `http://localhost:8080/api/lyrics?artist=${artist}&title=${title}`
         );
         const data = await response.json();
-        setLyrics(data.lyrics || '❌ Testo non disponibile');
+        setLyrics(data.lyrics || 'Testo non disponibile');
       } catch (err) {
         console.error('Errore nel caricamento del testo:', err);
-        setLyrics('❌ Errore nel recupero del testo');
+        setLyrics('Errore nel recupero del testo');
       }
     };
 
@@ -125,14 +121,13 @@ const LyricsPage = () => {
 
               <div>
                 {lyrics ? (
-                 <div className="karaoke-area gold-text">
-  {lyrics.split('\n').map((line, index) => (
-    <p key={index} className="karaoke-line">
-      {line}
-    </p>
-  ))}
-</div>
-
+                  <div className="karaoke-area gold-text">
+                    {lyrics.split('\n').map((line, index) => (
+                      <p key={index} className="karaoke-line">
+                        {line}
+                      </p>
+                    ))}
+                  </div>
                 ) : (
                   <Spinner animation="border" />
                 )}
@@ -184,7 +179,8 @@ const LyricsPage = () => {
                 className="glow-button bg-dark w-100 mt-2 d-flex justify-content-center align-items-center instagram-btn gold-text"
               >
                 <FaInstagram className="mt-3 me-4 gold-text" size={20} />
-                Seleziona frasi e <br />condividile nelle stories
+                Seleziona frasi e <br />
+                condividile nelle stories
               </Button>
             </div>
           </Col>

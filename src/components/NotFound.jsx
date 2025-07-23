@@ -1,37 +1,42 @@
-import { Button, Container } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
-
+import { Button, Container } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NotFound = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-    
-    <Container fluid className="text-center mt-0 bg-primary h-100 py-5 mt-3 mb-3 gold-text">
-      <h2 className='text-white'>Dove pensavi di andare, bro?</h2>
-   
-<img
-  src="https://pbs.twimg.com/tweet_video_thumb/DQjlHWeWAAEL4wL.jpg"
-  alt="Errore"
-  className="img-fluid me-5 my-2" 
-  style={{ maxWidth: '400px' }}
-/>
-<p>Vuoi tornare in <Link to="/" className='gold-text'>HOME </Link>? <br /> (Lesto, prima che Gigio si incazzi)</p>
+    <Container
+      fluid
+      className="text-center mt-0 bg-primary h-100 py-5 mt-3 mb-3 gold-text"
+    >
+      <h2 className="text-white">Dove pensavi di andare, bro?</h2>
 
-    
+      <img
+        src="https://pbs.twimg.com/tweet_video_thumb/DQjlHWeWAAEL4wL.jpg"
+        alt="Errore"
+        className="img-fluid me-5 my-2"
+        style={{ maxWidth: '400px' }}
+      />
+
       <p>
-      <Button
-  variant="dark"
-  onClick={() => navigate('/')}
-  className="gold-text btn-fixed"
->
-  BACK HOME
-</Button>
-
-
+        Vuoi tornare in{' '}
+        <Link to="/" className="gold-text">
+          HOME
+        </Link>? <br />
+        (Lesto, prima che Gigio si incazzi)
       </p>
-   </Container>
-  )
-}
 
-export default NotFound
+      <p>
+        <Button
+          variant="dark"
+          onClick={() => navigate('/')}
+          className="gold-text btn-fixed"
+        >
+          BACK HOME
+        </Button>
+      </p>
+    </Container>
+  );
+};
+
+export default NotFound;
