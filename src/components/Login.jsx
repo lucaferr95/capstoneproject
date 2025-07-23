@@ -12,7 +12,7 @@ const useTypingEffect = (text, speed = 40) => {
     let i = 0;
     const timer = setInterval(() => {
       if (i < text.length) {
-        setDisplayedText(prev => prev + text.charAt(i));
+        setDisplayedText((prev) => prev + text.charAt(i));
         i++;
       } else {
         clearInterval(timer);
@@ -40,7 +40,6 @@ const Login = () => {
     setError('');
 
     try {
-      // Login: ottieni il token
       const response = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -52,7 +51,6 @@ const Login = () => {
       const token = await response.text();
       localStorage.setItem('token', token);
 
-      // Recupera info utente
       const userRes = await fetch('http://localhost:8080/auth/me', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -60,23 +58,14 @@ const Login = () => {
       });
 
       const userData = await userRes.json();
-      console.log("Dati utente:", userData);
-      localStorage.setItem("userId", userData.id);
+      localStorage.setItem('userId', userData.id);
+      localStorage.setItem('avatar', userData.avatar || '/assets/avatar/default.png');
+      localStorage.setItem('username', userData.username);
+      localStorage.setItem('role', userData.userType);
 
-
-      localStorage.setItem("avatar", userData.avatar || "/assets/avatar/default.png");
-      localStorage.setItem("username", userData.username);
-      localStorage.setItem("role", userData.userType); // se il backend restituisce userType
-      console.log("Ruolo ricevuto al login:", userData.userType);
-
-
-
-
-      //  Carica preferiti da localStorage
       const userFavs = JSON.parse(localStorage.getItem(`favourites_${userData.username}`)) || [];
       dispatch({ type: 'RESET_FAVOURITES', payload: userFavs });
 
-      // Vai alla home
       navigate('/');
     } catch (err) {
       setError('Login fallito: ' + err.message);
