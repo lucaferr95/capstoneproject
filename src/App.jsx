@@ -22,6 +22,9 @@ import BadgePage from "./components/BadgePage.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/App.css";
 import "./styles/Buttons.css";
+import Chisiamo from "./components/ChiSiamo.jsx";
+import PrivacyPage from "./components/PrivacyPage.jsx";
+import Contatti from "./components/Contatti.jsx";
 
 // Rotta protetta per l’admin
 const AdminRoute = ({ children }) => {
@@ -52,7 +55,11 @@ const App = () => {
               <Route path="/regole" element={<QuizRules />} />
               <Route path="/Daylyquiz" element={<DailyQuiz />} />
               <Route path="/badge" element={<BadgePage />} />
+              <Route path="/chisiamo" element={<Chisiamo/>} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/contatti" element={<Contatti />} />
+
 
               <Route
                 path="/backoffice"

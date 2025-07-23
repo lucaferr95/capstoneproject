@@ -24,17 +24,16 @@ const MyFooter = () => {
 
         <Row className="text-center gy-2 small gold-text pb-3">
           <Col xs={12} md="auto" className='text-white'>
-            <a href="#" className="gold-text-decoration-none">Condizioni dei servizi internet</a>
+            <Nav.Link as={Link} to="/chisiamo">Chi siamo</Nav.Link>
           </Col>
+          <Col xs={12} md="auto" className='text-white'>
+            <Nav.Link as={Link} to="/privacy">Fuori di testo e privacy</Nav.Link>
+          </Col>
+        
           <Col xs={12} md="auto">
-            <a href="#" className="gold-text-decoration-none">Fuori di testo e privacy</a>
-          </Col>
-          <Col xs={12} md="auto">
-            <a href="#" className="gold-text-decoration-none">Avviso sui cookie</a>
-          </Col>
-          <Col xs={12} md="auto">
-            <a href="#" className="gold-text-decoration-none">Supporto</a>
-          </Col>
+  <Nav.Link as={Link} to="/contatti">Contatti</Nav.Link>
+</Col>
+
           <Col xs={12} md="auto">
            <Nav.Link as={Link} to="/dicono-di-noi">Dicono di noi</Nav.Link>
 

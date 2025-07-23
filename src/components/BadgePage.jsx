@@ -58,7 +58,7 @@ const BadgePage = () => {
 }, [dispatch, userId]);
 
 
-  // Badge appena sbloccato → popup visivo
+  // Badge appena sbloccato = popup visivo
   useEffect(() => {
     const previousPoints = parseInt(localStorage.getItem(`points_${userId}`) || "0");
 
