@@ -1,17 +1,85 @@
-<<<<<<< HEAD
-# React + Vite
+## 🎧 Fuori di Testo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Link app Vercel: https://capstoneproject-415b.vercel.app/
+Repo frontend: https://github.com/lucaferr95/capstoneproject
+Repo backend: https://github.com/lucaferr95/CapstoneProjectBackend
 
-Currently, two official plugins are available:
+## 📝 Descrizione generale()
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+{
+La mia idea è quella di creare un'app musicale con la funzione di trovare testi musicali con
+un'interfaccia e un font ispirati all’ambiente visivo di VSCode. L’app permette appunto
+di cercare e leggere testi e inoltre di affrontare quiz giornalieri,
+guadagnare punti e sbloccare badge
+}
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# CapstoneProject
-Progetto finale individuale del corso Epicode
->>>>>>> 01e8b6d3a1922c8575f49b09ad1a4e99acac4dd1
+## 🎯 Obiettivi()
+
+{
+
+- Rendere i testi musicali il punto centrale di un'esperienza web innovativa.
+- Stimolare l’apprendimento musicale attraverso quiz.
+- Coinvolgere l’utente con dinamiche di punteggio e personalizzazione.
+- Offrire un’interfaccia originale e alternativa, ispirata agli editor di codice.
+  }
+
+---
+
+## 👤 Target()
+
+{
+
+- Appassionati di musica e parole
+- Persone che vogliono memorizzare testi
+- Utenti appassionati di coding, attratti da interfacce tipo VSCode
+- Chi ama quiz, badge ecc
+  }
+
+---
+
+## 🧩 Funzionalità principali()
+
+{
+
+- 🔍 Ricerca di testi musicali tramite API
+- 📄 Visualizzazione del testo completo
+- 🔐 Login/registrazione sicura con JWT
+- 💾 Salvataggio nei preferiti
+
+## 💡 Funzionalità aggiuntive()
+
+{
+
+- 🧠 Quiz giornaliero
+- 🏅 Sblocco di badge tramite punti
+- Personalizzazione profilo
+- Card personalizzate dei testi da condividere sui social
+- 🌍 Lettura dei testi (API esterna)
+- 🎧 Riconoscimnento brani tramite click sul logo
+  }
+
+---
+
+## 🎮 Sistema di punteggio()
+
+{
+
+- ✅ Quiz completati (5 punti per 4 domande)
+- ✅ Salvataggio testi (5 punti per max 4 volte al giorno)
+- ✅ Sblocco badge (da 0 a 1000 punti)
+  }
+
+---
+
+## 🧱Tecnologie da utilizzare(quelle del corso)
+
+{
+
+- **Frontend**: React, React Router, Bootstrap, localStorage
+- **Backend**: Spring Boot, Spring Security (JWT), JPA
+- **Database**: PostgreSQL
+  }
+
+- {LUCA}
