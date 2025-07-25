@@ -1,6 +1,9 @@
 ## 🎧 Fuori di Testo
 
-Link app Vercel: https://capstoneproject-415b.vercel.app/
+Link app Vercel: https://capstoneproject-woad.vercel.app/
+Profilo creato per farvi testare l'app:
+Username: epstone
+password: capstone
 Repo frontend: https://github.com/lucaferr95/capstoneproject
 Repo backend: https://github.com/lucaferr95/CapstoneProjectBackend
 
