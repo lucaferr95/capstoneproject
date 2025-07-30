@@ -6,12 +6,12 @@ const Backoffice = () => {
   const [contactList, setContactList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
 
 
   const fetchFeedbacks = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/feedback/`, {
+      const res = await fetch(`${API_URL}/api/feedback`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -40,7 +40,7 @@ const Backoffice = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}api/feedback/${id}`, {
+      const res = await fetch(`${API_URL}/api/feedback/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -62,7 +62,7 @@ const Backoffice = () => {
     if (!confirm) return;
 
     try {
-      const res = await fetch(`${API_URL}api/feedback/${id}/with-user`, {
+      const res = await fetch(`${API_URL}/api/feedback/${id}/with-user`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

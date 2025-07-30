@@ -23,7 +23,7 @@ const LyricsPage = () => {
   const [coverUrl, setCoverUrl] = useState(null);
   const [songData, setSongData] = useState(null);
   const [highlightedText, setHighlightedText] = useState('');
-   const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
   const handleGenerateCard = () => {
     const selectedText = window.getSelection().toString().trim();
     if (selectedText) {

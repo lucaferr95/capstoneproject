@@ -6,11 +6,11 @@ const FeedbackForm = () => {
   const [comment, setComment] = useState("");
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; ;
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:8080/api/feedback", {
+    fetch(`${API_URL}/api/feedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

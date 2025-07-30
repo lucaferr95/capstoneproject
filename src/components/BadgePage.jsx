@@ -6,7 +6,7 @@ import { setPointsForUser } from "../components/Redux/Action/setPoint";
 const BadgePage = () => {
   const dispatch = useDispatch();
   const [unlockedBadge, setUnlockedBadge] = useState(null);
- const API_URL = process.env.REACT_APP_API_URL;
+ const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
   // Recupero userId dal token JWT
   const token = localStorage.getItem("token");
   const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;

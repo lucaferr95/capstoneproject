@@ -28,7 +28,7 @@ const useTypingEffect = (text, speed = 40) => {
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-      const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
   const [data, setData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
-const API_URL = process.env.REACT_APP_API_URL;
-console.log("ENV API:", process.env.REACT_APP_API_URL);
+const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
 
 // Hook per effetto scrittura
 const useTypingEffect = (text, speed = 40) => {

@@ -5,7 +5,7 @@ const Contatti = () => {
   const [comment, setComment] = useState("");
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
   const handleSubmit = async (e) => {
     e.preventDefault();
 

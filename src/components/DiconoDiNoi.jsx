@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
 const DiconoDiNoi = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
   useEffect(() => {
     const fetchFeedback = async () => {
       try {

@@ -6,7 +6,7 @@ const Profile = () => {
   // Recupera il token JWT dal localStorage per autenticazione
   const token = localStorage.getItem("token");
   const [avatar, setAvatar] = useState(localStorage.getItem("avatar"));
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
 
     // Reference per il campo input file (usato per avatar)
   const avatarInputRef = useRef();
