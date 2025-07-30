@@ -5,12 +5,12 @@ const Contatti = () => {
   const [comment, setComment] = useState("");
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:8080/api/feedback", {
+      const res = await fetch(`${API_URL}/api/feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

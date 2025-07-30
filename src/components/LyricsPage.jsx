@@ -23,7 +23,7 @@ const LyricsPage = () => {
   const [coverUrl, setCoverUrl] = useState(null);
   const [songData, setSongData] = useState(null);
   const [highlightedText, setHighlightedText] = useState('');
-
+   const API_URL = process.env.REACT_APP_API_URL;
   const handleGenerateCard = () => {
     const selectedText = window.getSelection().toString().trim();
     if (selectedText) {
@@ -71,7 +71,7 @@ const LyricsPage = () => {
     const fetchLyrics = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/lyrics?artist=${artist}&title=${title}`
+          `${API_URL}/api/lyrics?artist=${artist}&title=${title}`
         );
         const data = await response.json();
         setLyrics(data.lyrics || 'Testo non disponibile');

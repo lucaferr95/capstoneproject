@@ -28,7 +28,7 @@ const useTypingEffect = (text, speed = 40) => {
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+      const API_URL = process.env.REACT_APP_API_URL;
   const [data, setData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
@@ -40,7 +40,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -51,7 +51,7 @@ const Login = () => {
       const token = await response.text();
       localStorage.setItem('token', token);
 
-      const userRes = await fetch('http://localhost:8080/auth/me', {
+      const userRes = await fetch(`${API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

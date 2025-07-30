@@ -6,7 +6,7 @@ import { setPointsForUser } from "../components/Redux/Action/setPoint";
 const BadgePage = () => {
   const dispatch = useDispatch();
   const [unlockedBadge, setUnlockedBadge] = useState(null);
-
+ const API_URL = process.env.REACT_APP_API_URL;
   // Recupero userId dal token JWT
   const token = localStorage.getItem("token");
   const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
@@ -44,7 +44,7 @@ const BadgePage = () => {
   useEffect(() => {
   const token = localStorage.getItem("token");
 
-  fetch("http://localhost:8080/punti/totali", {
+  fetch(`${API_URL}/punti/totali`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -6,6 +6,7 @@ const Profile = () => {
   // Recupera il token JWT dal localStorage per autenticazione
   const token = localStorage.getItem("token");
   const [avatar, setAvatar] = useState(localStorage.getItem("avatar"));
+  const API_URL = process.env.REACT_APP_API_URL;
 
     // Reference per il campo input file (usato per avatar)
   const avatarInputRef = useRef();
@@ -21,7 +22,7 @@ const Profile = () => {
 
   // Recupera informazioni utente (nome, username, avatar)  useEffect(() => {
   useEffect(() => {
-  fetch("http://localhost:8080/auth/me", {
+  fetch(`${API_URL}/auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -41,7 +42,7 @@ const Profile = () => {
 
   // Recupera i dati musicali
   useEffect(() => {
-    fetch("http://localhost:8080/profile/me", {
+    fetch(`${API_URL}/profile/me`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -76,7 +77,7 @@ const Profile = () => {
       tracks: formData.tracks
     };
 
-    fetch("http://localhost:8080/profile/me", {
+    fetch(`${API_URL}/profile/me`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +109,7 @@ const Profile = () => {
     console.log("Token per upload:", token);
 
 
-    fetch("http://localhost:8080/users/me/avatar", {
+    fetch(`${API_URL}/users/me/avatar`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`

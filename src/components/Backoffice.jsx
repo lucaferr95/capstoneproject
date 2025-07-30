@@ -6,10 +6,12 @@ const Backoffice = () => {
   const [contactList, setContactList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const API_URL = process.env.REACT_APP_API_URL;
+
 
   const fetchFeedbacks = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/feedback", {
+      const res = await fetch(`${API_URL}/api/feedback/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -38,7 +40,7 @@ const Backoffice = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/feedback/${id}`, {
+      const res = await fetch(`${API_URL}api/feedback/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -60,7 +62,7 @@ const Backoffice = () => {
     if (!confirm) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/api/feedback/${id}/with-user`, {
+      const res = await fetch(`${API_URL}api/feedback/${id}/with-user`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

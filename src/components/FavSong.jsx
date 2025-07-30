@@ -10,7 +10,6 @@ const Favourites = () => {
   const favourites = useSelector((state) => state.fav.list);
   const dispatch = useDispatch();
   const isLoggedIn = !!localStorage.getItem("token");
-
   const handleAddFavourite = (song) => {
     if (!isLoggedIn) {
       alert("Devi essere loggato per aggiungere ai preferiti.");

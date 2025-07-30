@@ -4,11 +4,11 @@ import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
 const DiconoDiNoi = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const API_URL = process.env.REACT_APP_API_URL;
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/feedback");
+        const res = await fetch(`${API_URL}/api/feedback`);
         const data = await res.json();
         setComments(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         console.log("Feedback ricevuti:", data);
