@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 const API_URL = process.env.REACT_APP_API_URL;
+console.log("ENV API:", process.env.REACT_APP_API_URL);
+
 // Hook per effetto scrittura
 const useTypingEffect = (text, speed = 40) => {
   const [displayedText, setDisplayedText] = useState('');
