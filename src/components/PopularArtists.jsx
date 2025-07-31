@@ -84,15 +84,25 @@ const handleFavouriteClick = (song) => {
   
     const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
   
-    if (isAlreadyFavourite) {
-      dispatch(removeFromFavouriteAction(song));
-    } else {
-      dispatch(addToFavouriteAction(song));
-      dispatch(setPointsForUser(userId, 5)); // Reuse working logic
-      setRecentlyAwardedId(song.id);
-      setShowPointsMessage(true);
-      setTimeout(() => setShowPointsMessage(false), 3000);
-    }
+    if (!isAlreadyFavourite) {
+  dispatch(addToFavouriteAction(song));
+  dispatch(setPointsForUser(userId, 5));
+  setRecentlyAwardedId(song.id);
+  setShowPointsMessage(true);
+  setTimeout(() => setShowPointsMessage(false), 3000);
+
+  if (userId) {
+    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ punti: 5 }),
+    }).catch((err) => console.error("Errore nell'aggiunta dei punti:", err));
+  }
+}
+
   };
 
 // Funzione per riconoscere le canzoni
