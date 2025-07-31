@@ -92,15 +92,18 @@ const handleFavouriteClick = (song) => {
   setTimeout(() => setShowPointsMessage(false), 3000);
 
   if (userId) {
-    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ punti: 5 }),
-    }).catch((err) => console.error("Errore nell'aggiunta dei punti:", err));
+    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${token}`,
   }
+})
+.then(res => {
+  if (!res.ok) throw new Error("Errore nel salvataggio punti");
+  return res.text();
+})
+.then(data => console.log("✅", data))
+.catch(err => console.error("❌", err));
 }
 
   };
