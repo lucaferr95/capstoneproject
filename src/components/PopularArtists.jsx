@@ -87,29 +87,26 @@ const handleFavouriteClick = (song) => {
   } else {
     dispatch(addToFavouriteAction(song));
 
-    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/manuale", {
+    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
   method: "POST",
   headers: {
-    "Content-Type": "application/json",
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
-  body: JSON.stringify({
-    userId: parseInt(localStorage.getItem("userId")), // Assicurati che sia salvato
-    newPoints: 5,
-  }),
 })
   .then((res) => {
     if (res.ok) {
-      setRecentlyAwardedId(song.id);
-      setShowPointsMessage(true);
+      console.log("✅ Punti aggiunti con successo!");
+      setRecentlyAwardedId(song.id);   // utile se vuoi mostrare "+5" vicino alla card
+      setShowPointsMessage(true);      // mostro alert globale
       setTimeout(() => setShowPointsMessage(false), 3000);
     } else if (res.status === 403) {
-      console.log("Limite raggiunto o accesso negato");
+      console.warn("⚠️ Accesso negato, token non valido o non autenticato.");
     } else {
-      console.error("Errore nell'aggiunta dei punti");
+      console.error("❌ Errore generico durante l'aggiunta dei punti.");
     }
   })
-  .catch((err) => console.error("Errore nella fetch punti:", err));
+  .catch((err) => console.error("❌ Errore di rete:", err));
+
 
   }
 };
