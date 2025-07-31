@@ -43,12 +43,25 @@ const BadgePage = () => {
   //Chiamata fetch per backend
   useEffect(() => {
   const token = localStorage.getItem("token");
+  console.log("TOKEN INVIATO AL BACKEND:", token);
 
-  fetch(`${API_URL}/punti/totali`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  const token = localStorage.getItem("token");
+
+fetch(`${API_URL}/punti/totali`, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+  .then(res => {
+    if (!res.ok) throw new Error("Token non valido o accesso negato");
+    return res.json();
   })
+  .then(data => {
+    console.log("Totale punti:", data);
+  })
+  .catch(err => console.error("Errore punti:", err));
+
+
     .then(res => res.json())
     .then(total => {
       dispatch(setPointsForUser(userId, total));
