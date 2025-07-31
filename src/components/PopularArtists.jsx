@@ -8,7 +8,7 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import '../styles/Buttons.css';
 import MicRecorder from 'mic-recorder-to-mp3-fixed';
 import { addPoints } from "../components/Redux/Action/setPoint";
-
+import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
 const PopularArtists = () => {
   const dispatch = useDispatch();

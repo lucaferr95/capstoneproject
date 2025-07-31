@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { addPoints } from "../components/Redux/Action/setPoint";
+import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
