@@ -29,7 +29,9 @@ const PopularArtists = () => {
   
   const internationalArtists = ['Taylor Swift', 'Coldplay', 'The Weeknd', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
- 
+  const token = localStorage.getItem("token");
+const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
+const userId = payload?.id;
 
 
   // Recupero i dati da Deezer
@@ -75,41 +77,23 @@ useEffect(() => {
 
 // Aggiunta ai preferiti e gestione punti
 const handleFavouriteClick = (song) => {
-  if (!isLoggedIn) {
-    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-    return;
-  }
-
-  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-
-  if (isAlreadyFavourite) {
-    dispatch(removeFromFavouriteAction(song));
-  } else {
-    dispatch(addToFavouriteAction(song));
-
-    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-})
-  .then((res) => {
-    if (res.ok) {
-      console.log("✅ Punti aggiunti con successo!");
-      setRecentlyAwardedId(song.id);   // utile se vuoi mostrare "+5" vicino alla card
-      setShowPointsMessage(true);      // mostro alert globale
-      setTimeout(() => setShowPointsMessage(false), 3000);
-    } else if (res.status === 403) {
-      console.warn("⚠️ Accesso negato, token non valido o non autenticato.");
-    } else {
-      console.error("❌ Errore generico durante l'aggiunta dei punti.");
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
     }
-  })
-  .catch((err) => console.error("❌ Errore di rete:", err));
-
-
-  }
-};
+  
+    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+  
+    if (isAlreadyFavourite) {
+      dispatch(removeFromFavouriteAction(song));
+    } else {
+      dispatch(addToFavouriteAction(song));
+      dispatch(setPointsForUser(userId, 5)); // Reuse working logic
+      setRecentlyAwardedId(song.id);
+      setShowPointsMessage(true);
+      setTimeout(() => setShowPointsMessage(false), 3000);
+    }
+  };
 
 // Funzione per riconoscere le canzoni
 const startRecognition = async () => {

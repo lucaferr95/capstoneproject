@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import "../styles/Buttons.css";
 import { addPoints } from "../components/Redux/Action/setPoint";
+import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
 const NewSongs = () => {
   // Stato locale
@@ -15,6 +16,10 @@ const NewSongs = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [showPointsMessage, setShowPointsMessage] = useState(false);
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
+  const token = localStorage.getItem("token");
+const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
+const userId = payload?.id;
+
 
   // Stato globale
   const dispatch = useDispatch();
@@ -50,42 +55,24 @@ const NewSongs = () => {
 
   // Aggiunta ai preferiti e gestione punti
   const handleFavouriteClick = (song) => {
-    if (!isLoggedIn) {
-      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-      return;
-    }
-  
-    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-  
-    if (isAlreadyFavourite) {
-      dispatch(removeFromFavouriteAction(song));
-    } else {
-      dispatch(addToFavouriteAction(song));
-  
-      fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-})
-  .then((res) => {
-    if (res.ok) {
-      console.log("✅ Punti aggiunti con successo!");
-      setRecentlyAwardedId(song.id);   // utile se vuoi mostrare "+5" vicino alla card
-      setShowPointsMessage(true);      // mostro alert globale
-      setTimeout(() => setShowPointsMessage(false), 3000);
-    } else if (res.status === 403) {
-      console.warn("⚠️ Accesso negato, token non valido o non autenticato.");
-    } else {
-      console.error("❌ Errore generico durante l'aggiunta dei punti.");
-    }
-  })
-  .catch((err) => console.error("❌ Errore di rete:", err));
+  if (!isLoggedIn) {
+    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+    return;
+  }
 
+  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
 
+  if (isAlreadyFavourite) {
+    dispatch(removeFromFavouriteAction(song));
+  } else {
+    dispatch(addToFavouriteAction(song));
+    dispatch(setPointsForUser(userId, 5)); // Reuse working logic
+    setRecentlyAwardedId(song.id);
+    setShowPointsMessage(true);
+    setTimeout(() => setShowPointsMessage(false), 3000);
+  }
+};
 
-    }
-  };
   
 
   return (
