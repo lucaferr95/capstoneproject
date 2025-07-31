@@ -104,6 +104,7 @@ const handleFavouriteClick = (song) => {
 })
 .then(data => console.log("✅", data))
 .catch(err => console.error("❌", err));
+  }
 }
 
   };
