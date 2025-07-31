@@ -45,7 +45,7 @@ const BadgePage = () => {
   const token = localStorage.getItem("token");
   console.log("TOKEN INVIATO AL BACKEND:", token);
 
-  const token = localStorage.getItem("token");
+
 
 fetch(`${API_URL}/punti/totali`, {
   headers: {
