@@ -19,33 +19,7 @@ const SearchResults = () => {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("token");
   const favourites = useSelector((state) => state.fav.list);
-
-  //Limite punteggio per aggiunte ai preferiti
-  const POINTS_LIMIT = 4;
-  const POINTS_AMOUNT = 5;
-  const POINTS_DATE_KEY = "favourite_points_date";
-  const POINTS_COUNT_KEY = "favourite_points_count";
   
-    // Funzione per controllare se l'utente può ancora guadagnare punti(5 punti x max 4 volte al gg)
-
-  const canEarnPoints = () => {
-    const today = new Date().toISOString().slice(0, 10);
-    const lastDate = localStorage.getItem(POINTS_DATE_KEY);
-    let count = parseInt(localStorage.getItem(POINTS_COUNT_KEY)) || 0;
-
-    if (lastDate !== today) {
-      localStorage.setItem(POINTS_DATE_KEY, today);
-      localStorage.setItem(POINTS_COUNT_KEY, "1");
-      return true;
-    }
-
-    if (count >= POINTS_LIMIT) {
-      return false;
-    }
-
-    localStorage.setItem(POINTS_COUNT_KEY, (count + 1).toString());
-    return true;
-  };
 
   useEffect(() => {
     if (!query) return;
@@ -82,14 +56,31 @@ const SearchResults = () => {
     } else {
       dispatch(addToFavouriteAction(song));
   
-      if (canEarnPoints()) {
-        dispatch(addPoints(POINTS_AMOUNT));
-        setRecentlyAwardedId(song.id);
-        setShowPointsMessage(true);
-        setTimeout(() => setShowPointsMessage(false), 3000);
-      } else {
-        console.log("Limite giornaliero raggiunto, niente punti aggiunti");
-      }
+      fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/manuale", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+    userId: parseInt(localStorage.getItem("userId")), // Assicurati che sia salvato
+    newPoints: 5,
+  }),
+})
+  .then((res) => {
+    if (res.ok) {
+      setRecentlyAwardedId(song.id);
+      setShowPointsMessage(true);
+      setTimeout(() => setShowPointsMessage(false), 3000);
+    } else if (res.status === 403) {
+      console.log("Limite raggiunto o accesso negato");
+    } else {
+      console.error("Errore nell'aggiunta dei punti");
+    }
+  })
+  .catch((err) => console.error("Errore nella fetch punti:", err));
+
+    }
     }
   };
   

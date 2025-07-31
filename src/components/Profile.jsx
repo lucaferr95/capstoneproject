@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 const Profile = () => {
   // Recupera il token JWT dal localStorage per autenticazione
   const token = localStorage.getItem("token");
+  console.log("TOKEN:", token);
+
   const [avatar, setAvatar] = useState(localStorage.getItem("avatar"));
   const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
 
