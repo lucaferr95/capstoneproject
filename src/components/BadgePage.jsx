@@ -45,9 +45,7 @@ const BadgePage = () => {
   const token = localStorage.getItem("token");
   console.log("TOKEN INVIATO AL BACKEND:", token);
 
-
-
-fetch(`${API_URL}/punti/totali`, {
+  fetch(`${API_URL}/punti/totali`, {
   headers: {
     Authorization: `Bearer ${token}`,
   },
@@ -60,14 +58,6 @@ fetch(`${API_URL}/punti/totali`, {
     console.log("Totale punti:", data);
   })
   .catch(err => console.error("Errore punti:", err));
-
-
-    .then(res => res.json())
-    .then(total => {
-      dispatch(setPointsForUser(userId, total));
-      console.log("✨ Punti totali ricevuti:", total);
-    })
-    .catch(err => console.error("Errore nel fetch totale punti:", err));
 }, [dispatch, userId]);
 
 
