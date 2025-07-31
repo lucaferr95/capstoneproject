@@ -81,7 +81,6 @@ const SearchResults = () => {
   .catch((err) => console.error("Errore nella fetch punti:", err));
 
     }
-    }
   };
   
 
