@@ -5,34 +5,29 @@ import { addToFavouriteAction, removeFromFavouriteAction } from "./Redux/Action"
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import "../styles/Buttons.css";
-import { addPoints } from "../components/Redux/Action/setPoint";
 import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
 const NewSongs = () => {
-  // Stato locale
   const [songsData, setSongsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [showPointsMessage, setShowPointsMessage] = useState(false);
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
+  const [limitReached, setLimitReached] = useState(false);
+
   const token = localStorage.getItem("token");
-const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
-const userId = payload?.id;
+  const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  const userId = payload?.id;
 
-
-  // Stato globale
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const favourites = useSelector((state) => state.fav.list);
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = !!token;
 
-  // Recupero dei dati da Deezer
   useEffect(() => {
     const fetchData = async () => {
-      //inserisco 4 artisti per la sez nuove uscite
       const artists = ["Annalisa", "Achille Lauro", "Pinguini Tattici Nucleari", "Serena Brancale"];
-
       try {
         const fetchPromises = artists.map((artist) =>
           fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${artist}`)
@@ -40,7 +35,6 @@ const userId = payload?.id;
             .then((data) => ({ artist, songs: data.data }))
             .catch(() => ({ artist, songs: [] }))
         );
-
         const allData = await Promise.all(fetchPromises);
         setSongsData(allData);
         setLoading(false);
@@ -49,46 +43,47 @@ const userId = payload?.id;
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  // Aggiunta ai preferiti e gestione punti
   const handleFavouriteClick = (song) => {
-  if (!isLoggedIn) {
-    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-    return;
-  }
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
 
-  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
 
-  if (!isAlreadyFavourite) {
-  dispatch(addToFavouriteAction(song));
-  dispatch(setPointsForUser(userId, 5));
-  setRecentlyAwardedId(song.id);
-  setShowPointsMessage(true);
-  setTimeout(() => setShowPointsMessage(false), 3000);
+    if (!isAlreadyFavourite) {
+      dispatch(addToFavouriteAction(song));
+      setRecentlyAwardedId(song.id);
 
-  if (userId) {
-    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${token}`,
-  }
-})
-.then(res => {
-  if (!res.ok) throw new Error("Errore nel salvataggio punti");
-  return res.text();
-})
-.then(data => console.log("✅", data))
-.catch(err => console.error("❌", err));
-
-  }
-}
-
-};
-
-  
+      if (userId) {
+        fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          }
+        })
+          .then(res => {
+            if (res.status === 429 || res.status === 403) {
+              setLimitReached(true);
+              throw new Error("Limite giornaliero raggiunto");
+            }
+            if (!res.ok) throw new Error("Errore nel salvataggio punti");
+            return res.text();
+          })
+          .then(data => {
+            console.log("✅", data);
+            dispatch(setPointsForUser(userId, 5));
+            localStorage.setItem(`points_${userId}`, "5");
+            setShowPointsMessage(true);
+            setTimeout(() => setShowPointsMessage(false), 3000);
+          })
+          .catch(err => console.error("❌", err));
+      }
+    }
+  };
 
   return (
     <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", padding: "2rem" }}>
@@ -99,6 +94,12 @@ const userId = payload?.id;
       {showPointsMessage && (
         <Alert variant="success" className="text-center fw-bold">
           +5 punti ricevuti
+        </Alert>
+      )}
+
+      {limitReached && (
+        <Alert variant="warning" className="text-center fw-bold">
+          Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
         </Alert>
       )}
 
@@ -135,9 +136,7 @@ const userId = payload?.id;
                       <Button
                         className="me-2 mb-2 glow-button gold-text bg-dark"
                         onClick={() =>
-                          navigate(
-                            `/lyrics/${encodeURIComponent(song.artist.name)}/${encodeURIComponent(song.title)}`
-                          )
+                          navigate(`/lyrics/${encodeURIComponent(song.artist.name)}/${encodeURIComponent(song.title)}`)
                         }
                       >
                         Leggi testo

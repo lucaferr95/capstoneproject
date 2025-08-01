@@ -36,32 +36,27 @@ const BadgePage = () => {
     ...b,
     unlocked: points >= b.requiredPoints
   }))
-  // Salva i punti sempre nel localStorage aggiornato
+  // 🔄 Recupera punti dal backend
   useEffect(() => {
-    localStorage.setItem(`points_${userId}`, points.toString());
-  }, [userId, points]);
-  //Chiamata fetch per backend
-  useEffect(() => {
-  const token = localStorage.getItem("token");
-  console.log("TOKEN INVIATO AL BACKEND:", token);
+    const fetchPoints = async () => {
+      try {
+        const res = await fetch(`${API_URL}/punti/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error("Token non valido o accesso negato");
+        const data = await res.json();
+        setBackendPoints(data);
+        dispatch(setPointsForUser(userId, data));
+        localStorage.setItem(`points_${userId}`, data.toString());
+      } catch (err) {
+        console.error("❌ Errore nel recupero punti:", err);
+      }
+    };
 
-  fetch(`${API_URL}/punti/totali`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-})
-  .then(res => {
-    if (!res.ok) throw new Error("Token non valido o accesso negato");
-    return res.json();
-  })
-  .then(data => {
-    console.log("Totale punti:", data);
-  })
-  .catch(err => console.error("Errore punti:", err));
-}, [dispatch, userId]);
+    if (token) fetchPoints();
+  }, [dispatch, userId, token]);
 
-
-  // Badge appena sbloccato = popup visivo
+  // 🎉 Badge appena sbloccato
   useEffect(() => {
     const previousPoints = parseInt(localStorage.getItem(`points_${userId}`) || "0");
 
@@ -73,7 +68,7 @@ const BadgePage = () => {
       setUnlockedBadge(justUnlocked);
       setTimeout(() => setUnlockedBadge(null), 5000);
     }
-  }, [badges, points]);
+  }, [badges, points, userId]);
 
   return (
     <div className="badge-section bg-black bg-gradient px-4 py-5 my-3 position-relative">
@@ -99,11 +94,7 @@ const BadgePage = () => {
         {unlockedBadges.map((b) => (
           <div key={b.id} className={`badge-card ${b.unlocked ? "active" : "locked"}`}>
             <div className="badge-medal position-relative">
-              <img
-                src={b.avatar}
-                alt={b.artist}
-                className={b.unlocked ? "" : "blurred"}
-              />
+              <img src={b.avatar} alt={b.artist} className={b.unlocked ? "" : "blurred"} />
               {!b.unlocked && (
                 <div className="lock-overlay">
                   <span>🔒</span>

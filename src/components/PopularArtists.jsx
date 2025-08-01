@@ -26,7 +26,7 @@ const PopularArtists = () => {
   const recorder = new MicRecorder({ bitRate: 192 });
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
  const [showPointsMessage, setShowPointsMessage] = useState(false);
-  
+  const [limitReached, setLimitReached] = useState(false)
   const internationalArtists = ['Taylor Swift', 'Coldplay', 'The Weeknd', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
   const token = localStorage.getItem("token");
@@ -76,38 +76,48 @@ useEffect(() => {
 }, []);
 
 // Aggiunta ai preferiti e gestione punti
+// Dentro handleFavouriteClick
+
 const handleFavouriteClick = (song) => {
-    if (!isLoggedIn) {
-      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-      return;
+  if (!isLoggedIn) {
+    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+    return;
+  }
+
+  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+
+  if (!isAlreadyFavourite) {
+    dispatch(addToFavouriteAction(song));
+    setRecentlyAwardedId(song.id);
+
+    if (userId) {
+      fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        }
+      })
+        .then(res => {
+          if (res.status === 429 || res.status === 403) {
+            setLimitReached(true);
+            throw new Error("Limite giornaliero raggiunto");
+          }
+          if (!res.ok) throw new Error("Errore nel salvataggio punti");
+          return res.text();
+        })
+        .then(data => {
+          console.log("✅", data);
+          dispatch(setPointsForUser(userId, 5));
+          localStorage.setItem(`points_${userId}`, "5");
+          setShowPointsMessage(true);
+          setTimeout(() => setShowPointsMessage(false), 3000);
+        })
+        .catch(err => console.error("❌", err));
     }
-  
-    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-  
-    if (!isAlreadyFavourite) {
-  dispatch(addToFavouriteAction(song));
-  dispatch(setPointsForUser(userId, 5));
-  setRecentlyAwardedId(song.id);
-  setShowPointsMessage(true);
-  setTimeout(() => setShowPointsMessage(false), 3000);
-
-  if (userId) {
-    fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${token}`,
   }
-})
-.then(res => {
-  if (!res.ok) throw new Error("Errore nel salvataggio punti");
-  return res.text();
-})
-.then(data => console.log("✅", data))
-.catch(err => console.error("❌", err));
-  }
-}
+};
 
-  };
+
 
 // Funzione per riconoscere le canzoni
 const startRecognition = async () => {
@@ -271,8 +281,8 @@ return (
                         {recentlyAwardedId === song.id && (
                           <div className="mt-2 gold-text fw-bold text-center">+5 punti ricevuti</div>
                         )}
-
                         {!isLoggedIn && errorMsg && (
+                          
                           <Alert variant="danger" className="mt-2">
                             {errorMsg}
                           </Alert>
