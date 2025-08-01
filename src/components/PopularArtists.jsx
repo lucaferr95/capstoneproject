@@ -26,8 +26,8 @@ const PopularArtists = () => {
   const recorder = new MicRecorder({ bitRate: 192 });
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
  const [showPointsMessage, setShowPointsMessage] = useState(false);
-  const [limitReached, setLimitReached] = useState(false)
-  const internationalArtists = ['Taylor Swift', 'Coldplay', 'The Weeknd', 'Adele'];
+  const [limitReachedId, setLimitReachedId] = useState(null);
+  const internationalArtists = ['Bruno Mars', 'Coldplay', 'The Weeknd', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
   const token = localStorage.getItem("token");
 const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
@@ -79,43 +79,32 @@ useEffect(() => {
 // Dentro handleFavouriteClick
 
 const handleFavouriteClick = (song) => {
-  if (!isLoggedIn) {
-    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-    return;
-  }
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
 
-  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+    if (isAlreadyFavourite) return;
 
-  if (!isAlreadyFavourite) {
+    if (additionsToday >= 4) {
+      setLimitReachedId(song.id);
+      return;
+    }
+
     dispatch(addToFavouriteAction(song));
     setRecentlyAwardedId(song.id);
 
-    if (userId) {
-      fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      })
-        .then(res => {
-          if (res.status === 429 || res.status === 403) {
-            setLimitReached(true);
-            throw new Error("Limite giornaliero raggiunto");
-          }
-          if (!res.ok) throw new Error("Errore nel salvataggio punti");
-          return res.text();
-        })
-        .then(data => {
-          console.log("✅", data);
-          dispatch(setPointsForUser(userId, 5));
-          localStorage.setItem(`points_${userId}`, "5");
-          setShowPointsMessage(true);
-          setTimeout(() => setShowPointsMessage(false), 3000);
-        })
-        .catch(err => console.error("❌", err));
-    }
-  }
-};
+    const newPoints = currentPoints + 5;
+    const newAdditions = additionsToday + 1;
+
+    dispatch(setPointsForUser(userId, newPoints));
+    localStorage.setItem(`points_${userId}`, newPoints.toString());
+    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+
+    setShowPointsMessage(true);
+    setTimeout(() => setShowPointsMessage(false), 3000);
+  };
 
 
 
@@ -281,6 +270,11 @@ return (
                         {recentlyAwardedId === song.id && (
                           <div className="mt-2 gold-text fw-bold text-center">+5 punti ricevuti</div>
                         )}
+                        {limitReachedId === song.id && (
+                                                  <Alert variant="warning" className="text-center fw-bold mt-2">
+                                                    Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
+                                                  </Alert>
+                                                )}
                         {!isLoggedIn && errorMsg && (
                           
                           <Alert variant="danger" className="mt-2">

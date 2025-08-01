@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addToFavouriteAction, removeFromFavouriteAction } from "./Redux/Action";
+import { addToFavouriteAction } from "./Redux/Action";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import "../styles/Buttons.css";
@@ -14,17 +14,21 @@ const NewSongs = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [showPointsMessage, setShowPointsMessage] = useState(false);
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
-  const [limitReached, setLimitReached] = useState(false);
+  const [limitReachedId, setLimitReachedId] = useState(null);
 
   const token = localStorage.getItem("token");
   const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
   const userId = payload?.id;
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const favourites = useSelector((state) => state.fav.list);
   const isLoggedIn = !!token;
 
+// Recupera punti e aggiunte di oggi
+  const today = new Date().toISOString().split("T")[0];
+  const storedPoints = localStorage.getItem(`points_${userId}`) || "0";
+  const currentPoints = parseInt(storedPoints);
+  const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
   useEffect(() => {
     const fetchData = async () => {
       const artists = ["Annalisa", "Achille Lauro", "Pinguini Tattici Nucleari", "Serena Brancale"];
@@ -46,44 +50,33 @@ const NewSongs = () => {
     fetchData();
   }, []);
 
-  const handleFavouriteClick = (song) => {
-    if (!isLoggedIn) {
-      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-      return;
-    }
-
-    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-
-    if (!isAlreadyFavourite) {
+   const handleFavouriteClick = (song) => {
+      if (!isLoggedIn) {
+        setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+        return;
+      }
+  
+      const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+      if (isAlreadyFavourite) return;
+  
+      if (additionsToday >= 4) {
+        setLimitReachedId(song.id);
+        return;
+      }
+  
       dispatch(addToFavouriteAction(song));
       setRecentlyAwardedId(song.id);
-
-      if (userId) {
-        fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-          }
-        })
-          .then(res => {
-            if (res.status === 429 || res.status === 403) {
-              setLimitReached(true);
-              throw new Error("Limite giornaliero raggiunto");
-            }
-            if (!res.ok) throw new Error("Errore nel salvataggio punti");
-            return res.text();
-          })
-          .then(data => {
-            console.log("✅", data);
-            dispatch(setPointsForUser(userId, 5));
-            localStorage.setItem(`points_${userId}`, "5");
-            setShowPointsMessage(true);
-            setTimeout(() => setShowPointsMessage(false), 3000);
-          })
-          .catch(err => console.error("❌", err));
-      }
-    }
-  };
+  
+      const newPoints = currentPoints + 5;
+      const newAdditions = additionsToday + 1;
+  
+      dispatch(setPointsForUser(userId, newPoints));
+      localStorage.setItem(`points_${userId}`, newPoints.toString());
+      localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+  
+      setShowPointsMessage(true);
+      setTimeout(() => setShowPointsMessage(false), 3000);
+    };
 
   return (
     <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", padding: "2rem" }}>
@@ -94,12 +87,6 @@ const NewSongs = () => {
       {showPointsMessage && (
         <Alert variant="success" className="text-center fw-bold">
           +5 punti ricevuti
-        </Alert>
-      )}
-
-      {limitReached && (
-        <Alert variant="warning" className="text-center fw-bold">
-          Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
         </Alert>
       )}
 
@@ -162,6 +149,11 @@ const NewSongs = () => {
                       {recentlyAwardedId === song.id && (
                         <div className="mt-2 gold-text fw-bold text-center">+5 punti ricevuti</div>
                       )}
+                       {limitReachedId === song.id && (
+                                                <Alert variant="warning" className="text-center fw-bold mt-2">
+                                                  Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
+                                                </Alert>
+                                              )}
 
                       {!isLoggedIn && errorMsg && (
                         <Alert variant="danger" className="mt-2">{errorMsg}</Alert>

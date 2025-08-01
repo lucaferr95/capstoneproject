@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Spinner, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToFavouriteAction, removeFromFavouriteAction } from './Redux/Action';
+import { addToFavouriteAction } from './Redux/Action';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
@@ -14,25 +14,28 @@ const SearchResults = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
   const [showPointsMessage, setShowPointsMessage] = useState(false);
-  const [limitReached, setLimitReached] = useState(false);
-
+  const [limitReachedId, setLimitReachedId] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
-  const favourites = useSelector((state) => state.fav.list);
   const token = localStorage.getItem("token");
+  const isLoggedIn = !!token;
+  const favourites = useSelector((state) => state.fav.list);
   const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
   const userId = payload?.id;
+
+  // Recupera punti e aggiunte di oggi
+  const today = new Date().toISOString().split("T")[0];
+  const storedPoints = localStorage.getItem(`points_${userId}`) || "0";
+  const currentPoints = parseInt(storedPoints);
+  const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
 
   useEffect(() => {
     if (!query) return;
 
     const fetchResults = async () => {
       try {
-        const response = await fetch(
-          `https://striveschool-api.herokuapp.com/api/deezer/search?q=${query}`
-        );
+        const response = await fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${query}`);
         const data = await response.json();
         setResults(data.data || []);
       } catch (err) {
@@ -46,43 +49,32 @@ const SearchResults = () => {
   }, [query]);
 
   const handleFavouriteClick = (song) => {
-      if (!isLoggedIn) {
-        setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-        return;
-      }
-  
-      const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-  
-      if (!isAlreadyFavourite) {
-        dispatch(addToFavouriteAction(song));
-        setRecentlyAwardedId(song.id);
-  
-        if (userId) {
-          fetch("https://marvellous-suzy-lucaferr-65236e6e.koyeb.app/punti/aggiungi?amount=5", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${token}`,
-            }
-          })
-            .then(res => {
-              if (res.status === 429 || res.status === 403) {
-                setLimitReached(true);
-                throw new Error("Limite giornaliero raggiunto");
-              }
-              if (!res.ok) throw new Error("Errore nel salvataggio punti");
-              return res.text();
-            })
-            .then(data => {
-              console.log("✅", data);
-              dispatch(setPointsForUser(userId, 5));
-              localStorage.setItem(`points_${userId}`, "5");
-              setShowPointsMessage(true);
-              setTimeout(() => setShowPointsMessage(false), 3000);
-            })
-            .catch(err => console.error("❌", err));
-        }
-      }
-    };
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
+
+    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+    if (isAlreadyFavourite) return;
+
+    if (additionsToday >= 4) {
+      setLimitReachedId(song.id);
+      return;
+    }
+
+    dispatch(addToFavouriteAction(song));
+    setRecentlyAwardedId(song.id);
+
+    const newPoints = currentPoints + 5;
+    const newAdditions = additionsToday + 1;
+
+    dispatch(setPointsForUser(userId, newPoints));
+    localStorage.setItem(`points_${userId}`, newPoints.toString());
+    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+
+    setShowPointsMessage(true);
+    setTimeout(() => setShowPointsMessage(false), 3000);
+  };
 
   return (
     <Container className="text-white mt-4 mb-4">
@@ -149,11 +141,12 @@ const SearchResults = () => {
                         {recentlyAwardedId === song.id && (
                           <div className="mt-2 gold-text fw-bold text-center">+5 punti ricevuti</div>
                         )}
-                        {limitReached && (
-  <Alert variant="warning" className="text-center fw-bold">
-    Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
-  </Alert>
-)}
+
+                        {limitReachedId === song.id && (
+                          <Alert variant="warning" className="text-center fw-bold mt-2">
+                            Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
+                          </Alert>
+                        )}
 
                         {!isLoggedIn && errorMsg && (
                           <Alert variant="danger" className="mt-2">{errorMsg}</Alert>
