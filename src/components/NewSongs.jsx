@@ -51,36 +51,39 @@ const NewSongs = () => {
      (state) => state.pointReducer?.pointsByUser?.[userId] || 0
    );
    
-   const handleFavouriteClick = (song) => {
-     const today = new Date().toISOString().split("T")[0];
-     const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
-   
-     if (!isLoggedIn) {
-       setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-       return;
-     }
-   
-     const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-     if (isAlreadyFavourite) return;
-   
-     if (additionsToday >= 4) {
-       setLimitReachedId(song.id);
-       return;
-     }
-   
-     dispatch(addToFavouriteAction(song));
-     setRecentlyAwardedId(song.id);
-   
-     const newPoints = pointsFromRedux + 5;
-     const newAdditions = additionsToday + 1;
-   
-     dispatch(setPointsForUser(userId, newPoints));
-     localStorage.setItem(`points_${userId}`, newPoints.toString());
-     localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
-   
-     setShowPointsMessage(true);
-     setTimeout(() => setShowPointsMessage(false), 3000);
-   };
+  const handleFavouriteClick = (song) => {
+  const today = new Date().toISOString().split("T")[0];
+  const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
+
+  if (!isLoggedIn) {
+    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+    return;
+  }
+
+  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+  if (isAlreadyFavourite) return;
+
+  // ✅ Aggiungi SEMPRE ai preferiti
+  dispatch(addToFavouriteAction(song));
+
+  // ✅ Se non hai superato il limite, assegna punti
+  if (additionsToday < 4) {
+    const newPoints = pointsFromRedux + 5;
+    const newAdditions = additionsToday + 1;
+
+    dispatch(setPointsForUser(userId, newPoints));
+    localStorage.setItem(`points_${userId}`, newPoints.toString());
+    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+
+    setRecentlyAwardedId(song.id);
+    setShowPointsMessage(true);
+    setTimeout(() => setShowPointsMessage(false), 3000);
+  } else {
+    // ✅ Nessun punto, ma mostra messaggio di limite raggiunto
+    setLimitReachedId(song.id);
+  }
+};
+
    
 
   return (

@@ -94,24 +94,27 @@ const handleFavouriteClick = (song) => {
   const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
   if (isAlreadyFavourite) return;
 
-  if (additionsToday >= 4) {
-    setLimitReachedId(song.id);
-    return;
-  }
-
+  // ✅ Aggiungi SEMPRE ai preferiti
   dispatch(addToFavouriteAction(song));
-  setRecentlyAwardedId(song.id);
 
-  const newPoints = pointsFromRedux + 5;
-  const newAdditions = additionsToday + 1;
+  // ✅ Se non hai superato il limite, assegna punti
+  if (additionsToday < 4) {
+    const newPoints = pointsFromRedux + 5;
+    const newAdditions = additionsToday + 1;
 
-  dispatch(setPointsForUser(userId, newPoints));
-  localStorage.setItem(`points_${userId}`, newPoints.toString());
-  localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+    dispatch(setPointsForUser(userId, newPoints));
+    localStorage.setItem(`points_${userId}`, newPoints.toString());
+    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
 
-  setShowPointsMessage(true);
-  setTimeout(() => setShowPointsMessage(false), 3000);
+    setRecentlyAwardedId(song.id);
+    setShowPointsMessage(true);
+    setTimeout(() => setShowPointsMessage(false), 3000);
+  } else {
+    // ✅ Nessun punto, ma mostra messaggio di limite raggiunto
+    setLimitReachedId(song.id);
+  }
 };
+
 
 
 
