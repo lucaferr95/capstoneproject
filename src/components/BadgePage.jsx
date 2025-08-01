@@ -38,31 +38,7 @@ const BadgePage = () => {
   }))
   console.log("🔐 Token inviato:", token);
 
-  // 🔄 Recupera punti dal backend
- useEffect(() => {
-  const fetchPoints = async () => {
-    try {
-      const res = await fetch(`${API_URL}/punti/me`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
 
-      if (!res.ok) throw new Error("Token non valido o accesso negato");
-
-      const data = await res.json();
-      dispatch(setPointsForUser(userId, data));
-      localStorage.setItem(`points_${userId}`, data.toString());
-      console.log("✅ Punti ricevuti:", data);
-    } catch (err) {
-      console.error("❌ Errore nel recupero punti:", err);
-    }
-  };
-
-  if (token) fetchPoints();
-}, [dispatch, userId, token]);
 
 
   // 🎉 Badge appena sbloccato
