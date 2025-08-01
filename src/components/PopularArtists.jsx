@@ -78,37 +78,41 @@ useEffect(() => {
 // Aggiunta ai preferiti e gestione punti
 // Dentro handleFavouriteClick
 
+const pointsFromRedux = useSelector(
+  (state) => state.pointReducer?.pointsByUser?.[userId] || 0
+);
+
 const handleFavouriteClick = (song) => {
-   const today = new Date().toISOString().split("T")[0];
-    const storedPoints = localStorage.getItem(`points_${userId}`) || "0";
-    const currentPoints = parseInt(storedPoints);
-    const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
-    if (!isLoggedIn) {
-      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-      return;
-    }
+  const today = new Date().toISOString().split("T")[0];
+  const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
 
-    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-    if (isAlreadyFavourite) return;
+  if (!isLoggedIn) {
+    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+    return;
+  }
 
-    if (additionsToday >= 4) {
-      setLimitReachedId(song.id);
-      return;
-    }
+  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+  if (isAlreadyFavourite) return;
 
-    dispatch(addToFavouriteAction(song));
-    setRecentlyAwardedId(song.id);
+  if (additionsToday >= 4) {
+    setLimitReachedId(song.id);
+    return;
+  }
 
-    const newPoints = currentPoints + 5;
-    const newAdditions = additionsToday + 1;
+  dispatch(addToFavouriteAction(song));
+  setRecentlyAwardedId(song.id);
 
-    dispatch(setPointsForUser(userId, newPoints));
-    localStorage.setItem(`points_${userId}`, newPoints.toString());
-    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+  const newPoints = pointsFromRedux + 5;
+  const newAdditions = additionsToday + 1;
 
-    setShowPointsMessage(true);
-    setTimeout(() => setShowPointsMessage(false), 3000);
-  };
+  dispatch(setPointsForUser(userId, newPoints));
+  localStorage.setItem(`points_${userId}`, newPoints.toString());
+  localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
+
+  setShowPointsMessage(true);
+  setTimeout(() => setShowPointsMessage(false), 3000);
+};
+
 
 
 
