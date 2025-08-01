@@ -79,6 +79,10 @@ useEffect(() => {
 // Dentro handleFavouriteClick
 
 const handleFavouriteClick = (song) => {
+   const today = new Date().toISOString().split("T")[0];
+    const storedPoints = localStorage.getItem(`points_${userId}`) || "0";
+    const currentPoints = parseInt(storedPoints);
+    const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
     if (!isLoggedIn) {
       setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
       return;
