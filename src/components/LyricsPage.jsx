@@ -11,11 +11,21 @@ import '../styles/LyricsPage.css';
 import '../styles/CardShare.css';
 import { setPointsForUser } from '../components/Redux/Action/setPoint';
 
+const getUserId = () => {
+  const token = localStorage.getItem("token");
+  const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  return payload?.id || localStorage.getItem("userId");
+};
+
 const LyricsPage = () => {
   const { artist, title } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId = getUserId();
+  const isLoggedIn = !!userId;
+
   const favourites = useSelector((state) => state.fav.list);
+  const points = useSelector((state) => state.pointReducer?.pointsByUser?.[userId] || 0);
 
   const [lyrics, setLyrics] = useState('');
   const [coverUrl, setCoverUrl] = useState(null);
@@ -26,23 +36,16 @@ const LyricsPage = () => {
   const [limitReachedId, setLimitReachedId] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
-  const token = localStorage.getItem("token");
-  const isLoggedIn = !!token;
-  const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
-  const userId = payload?.id;
+  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app";
 
   const handleGenerateCard = () => {
     const selectedText = window.getSelection().toString().trim();
-    if (selectedText) {
-      setHighlightedText(selectedText);
-    }
+    if (selectedText) setHighlightedText(selectedText);
   };
 
   const exportCardAsImage = () => {
     const cardElement = document.getElementById('card-to-export');
     if (!cardElement) return;
-
     html2canvas(cardElement, { useCORS: true }).then((canvas) => {
       const link = document.createElement('a');
       link.download = `Quote_${title.replace(/\s+/g, '_')}.png`;
@@ -51,76 +54,59 @@ const LyricsPage = () => {
     });
   };
 
-  const isFavourite = songData && favourites.some((fav) => fav.id === songData.id);
-
-  const pointsFromRedux = useSelector(
-    (state) => state.pointReducer?.pointsByUser?.[userId] || 0
-  );
-  
   const handleFavouriteClick = (song) => {
-  const today = new Date().toISOString().split("T")[0];
-  const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
+    const today = new Date().toISOString().split("T")[0];
+    const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
 
-  if (!isLoggedIn) {
-    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-    return;
-  }
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
 
-  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-  if (isAlreadyFavourite) return;
+    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+    if (isAlreadyFavourite) return;
 
-  // ✅ Aggiungi SEMPRE ai preferiti
-  dispatch(addToFavouriteAction(song));
+    dispatch(addToFavouriteAction(song));
 
-  // ✅ Se non hai superato il limite, assegna punti
-  if (additionsToday < 4) {
-    const newPoints = pointsFromRedux + 5;
-    const newAdditions = additionsToday + 1;
-
-    dispatch(setPointsForUser(userId, newPoints));
-    localStorage.setItem(`points_${userId}`, newPoints.toString());
-    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
-
-    setRecentlyAwardedId(song.id);
-    setShowPointsMessage(true);
-    setTimeout(() => setShowPointsMessage(false), 3000);
-  } else {
-    // ✅ Nessun punto, ma mostra messaggio di limite raggiunto
-    setLimitReachedId(song.id);
-  }
-};
-
-  
+    if (additionsToday < 4) {
+      dispatch(setPointsForUser(userId, points + 5));
+      localStorage.setItem(`additions_${userId}_${today}`, additionsToday + 1);
+      setRecentlyAwardedId(song.id);
+      setShowPointsMessage(true);
+      setTimeout(() => setShowPointsMessage(false), 3000);
+    } else {
+      setLimitReachedId(song.id);
+    }
+  };
 
   useEffect(() => {
     const fetchLyrics = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/lyrics?artist=${artist}&title=${title}`);
-        const data = await response.json();
+        const res = await fetch(`${API_URL}/api/lyrics?artist=${artist}&title=${title}`);
+        const data = await res.json();
         setLyrics(data.lyrics || 'Testo non disponibile');
-      } catch (err) {
-        console.error('Errore nel caricamento del testo:', err);
+      } catch {
         setLyrics('Errore nel recupero del testo');
       }
     };
 
     const fetchCover = async () => {
       try {
-        const response = await fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${artist} ${title}`);
-        const data = await response.json();
+        const res = await fetch(`https://striveschool-api.herokuapp.com/api/deezer/search?q=${artist} ${title}`);
+        const data = await res.json();
         const song = data.data?.[0];
         setSongData(song);
-        if (song?.album?.cover_xl) {
-          setCoverUrl(song.album.cover_xl);
-        }
-      } catch (err) {
-        console.error('Errore nel recupero della cover:', err);
+        if (song?.album?.cover_xl) setCoverUrl(song.album.cover_xl);
+      } catch {
+        console.error('Errore nel recupero della cover');
       }
     };
 
     fetchLyrics();
     fetchCover();
   }, [artist, title]);
+
+  const isFavourite = songData && favourites.some((fav) => fav.id === songData.id);
 
   return (
     <div className="lyrics-page">
@@ -136,17 +122,15 @@ const LyricsPage = () => {
                 {decodeURIComponent(artist)} – {decodeURIComponent(title)}
               </h3>
 
-              <div>
-                {lyrics ? (
-                  <div className="karaoke-area gold-text">
-                    {lyrics.split('\n').map((line, index) => (
-                      <p key={index} className="karaoke-line">{line}</p>
-                    ))}
-                  </div>
-                ) : (
-                  <Spinner animation="border" />
-                )}
-              </div>
+              {lyrics ? (
+                <div className="karaoke-area gold-text">
+                  {lyrics.split('\n').map((line, index) => (
+                    <p key={index} className="karaoke-line">{line}</p>
+                  ))}
+                </div>
+              ) : (
+                <Spinner animation="border" />
+              )}
 
               <LyricCardPreview
                 line={highlightedText}
@@ -160,11 +144,7 @@ const LyricsPage = () => {
 
           <Col md={4}>
             <div className="w-100">
-              {coverUrl ? (
-                <img src={coverUrl} alt="Album Cover" className="lyrics-cover mb-3" />
-              ) : (
-                <div className="lyrics-cover-placeholder" />
-              )}
+              {coverUrl && <img src={coverUrl} alt="Album Cover" className="lyrics-cover mb-3" />}
 
               {songData && (
                 <>
@@ -189,7 +169,7 @@ const LyricsPage = () => {
 
                   {limitReachedId === songData.id && (
                     <Alert variant="warning" className="text-center fw-bold mt-2">
-                      Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
+                      Hai già raggiunto il limite giornaliero di punti
                     </Alert>
                   )}
                 </>
