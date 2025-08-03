@@ -7,7 +7,6 @@ import QuoteOfTheDay from './QuoteOfTheDay';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import '../styles/Buttons.css';
 import MicRecorder from 'mic-recorder-to-mp3-fixed';
-import { addPoints } from "../components/Redux/Action/setPoint";
 import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
 const PopularArtists = () => {
@@ -25,15 +24,16 @@ const PopularArtists = () => {
 
   const recorder = new MicRecorder({ bitRate: 192 });
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
- const [showPointsMessage, setShowPointsMessage] = useState(false);
+  const [showPointsMessage, setShowPointsMessage] = useState(false);
   const [limitReachedId, setLimitReachedId] = useState(null);
   const internationalArtists = ['Bruno Mars', 'Coldplay', 'The Weeknd', 'Adele'];
   const italianArtists = ['Marco Mengoni', 'Mahmood', 'Ultimo', 'Giorgia'];
   const token = localStorage.getItem("token");
-const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
-const userId = payload?.id;
+  const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  const userId = payload?.id;
+  const points = useSelector((state) => state.pointReducer?.pointsByUser?.[userId] || 0);
 
-
+ 
   // Recupero i dati da Deezer
 const fetchSongsByArtists = async (artists) => {
   return Promise.all(
@@ -99,17 +99,15 @@ const handleFavouriteClick = (song) => {
 
   // ✅ Se non hai superato il limite, assegna punti
   if (additionsToday < 4) {
-    const newPoints = pointsFromRedux + 5;
-    const newAdditions = additionsToday + 1;
+  const newPoints = points + 5;
+  dispatch(setPointsForUser(userId, newPoints));
+  localStorage.setItem(`additions_${userId}_${today}`, (additionsToday + 1).toString());
 
-    dispatch(setPointsForUser(userId, newPoints));
-    localStorage.setItem(`points_${userId}`, newPoints.toString());
-    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
-
-    setRecentlyAwardedId(song.id);
-    setShowPointsMessage(true);
-    setTimeout(() => setShowPointsMessage(false), 3000);
-  } else {
+  setRecentlyAwardedId(song.id);
+  setShowPointsMessage(true);
+  setTimeout(() => setShowPointsMessage(false), 3000);
+}
+ else {
     // ✅ Nessun punto, ma mostra messaggio di limite raggiunto
     setLimitReachedId(song.id);
   }

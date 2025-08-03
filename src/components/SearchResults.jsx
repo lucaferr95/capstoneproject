@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Spinner, Button, Alert } from 'react-bootstr
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavouriteAction } from './Redux/Action';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { addPoints } from "../components/Redux/Action/setPoint";
+import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
  const getUserId = () => {
   const token = localStorage.getItem("token");
@@ -28,7 +28,8 @@ const SearchResults = () => {
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
   const favourites = useSelector((state) => state.fav.list);
- 
+  const points = useSelector((state) => state.pointReducer?.pointsByUser?.[userId] || 0);
+
 
 
   useEffect(() => {
@@ -66,13 +67,15 @@ const handleFavouriteClick = (song) => {
     dispatch(addToFavouriteAction(song));
 
     if (additionsToday < 4) {
-      dispatch(addPoints(userId, 5));
-      localStorage.setItem(`additions_${userId}_${today}`, (additionsToday + 1).toString());
+  const newPoints = points + 5;
+  dispatch(setPointsForUser(userId, newPoints));
+  localStorage.setItem(`additions_${userId}_${today}`, (additionsToday + 1).toString());
 
-      setRecentlyAwardedId(song.id);
-      setShowPointsMessage(true);
-      setTimeout(() => setShowPointsMessage(false), 3000);
-    } else {
+  setRecentlyAwardedId(song.id);
+  setShowPointsMessage(true);
+  setTimeout(() => setShowPointsMessage(false), 3000);
+}
+ else {
       setLimitReachedId(song.id);
     }
   };
