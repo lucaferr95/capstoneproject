@@ -13,6 +13,8 @@ const BadgePage = () => {
   const token = localStorage.getItem("token");
   const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
   const userId = payload?.id || localStorage.getItem("userId");
+  const lastPointUpdate = useSelector((state) => state.pointReducer?.lastUpdate);
+
 
   // Lettura punti da Redux
   const points = useSelector(
@@ -57,7 +59,7 @@ const BadgePage = () => {
   }
 
   previousPointsRef.current = points;
-}, [points, badges]);
+}, [points, badges, lastPointUpdate]);
 
 
 

@@ -9,11 +9,10 @@ const pointReducer = (state = initialState, action) => {
         ...state,
         pointsByUser: {
           ...state.pointsByUser,
-          [action.userId]: action.payload,
+          [action.payload.userId]: action.payload.points,
         },
+        lastUpdate: action.payload.timestamp,
       };
-    default:
-      return state;
   }
 };
 

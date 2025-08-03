@@ -1,7 +1,7 @@
 export const setPointsForUser = (userId, points) => ({
   type: "SET_POINTS_FOR_USER",
   userId,
-  payload: points,
+  payload: { userId, points, timestamp: Date.now() },
 });
 
 export const addPoints = (amount) => ({
