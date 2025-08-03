@@ -13,6 +13,8 @@ const pointReducer = (state = initialState, action) => {
         },
         lastUpdate: action.payload.timestamp,
       };
+    default:
+      return state;
   }
 };
 
