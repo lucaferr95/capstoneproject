@@ -5,7 +5,7 @@ import { addToFavouriteAction } from "./Redux/Action";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import "../styles/Buttons.css";
-import { addPoints } from "../components/Redux/Action/setPoint";
+import { setPointsForUser } from "../components/Redux/Action/setPoint";
 
 // ✅ Funzione per ottenere userId
 const getUserId = () => {
@@ -68,12 +68,14 @@ const NewSongs = () => {
     dispatch(addToFavouriteAction(song));
 
     if (additionsToday < 4) {
-      dispatch(addPoints(userId, 5));
-      localStorage.setItem(`additions_${userId}_${today}`, (additionsToday + 1).toString());
+  const newPoints = points + 5;
+  dispatch(setPointsForUser(userId, newPoints));
+  localStorage.setItem(`additions_${userId}_${today}`, (additionsToday + 1).toString());
 
-      setRecentlyAwardedId(song.id);
-      setShowPointsMessage(true);
-      setTimeout(() => setShowPointsMessage(false), 3000);
+  setRecentlyAwardedId(song.id);
+  setShowPointsMessage(true);
+  setTimeout(() => setShowPointsMessage(false), 3000);
+
     } else {
       setLimitReachedId(song.id);
     }
