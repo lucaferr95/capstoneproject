@@ -5,7 +5,14 @@ import { addToFavouriteAction } from "./Redux/Action";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import "../styles/Buttons.css";
-import { setPointsForUser } from "../components/Redux/Action/setPoint";
+import { addPoints } from "../components/Redux/Action/setPoint";
+
+// ✅ Funzione per ottenere userId
+const getUserId = () => {
+  const token = localStorage.getItem("token");
+  const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  return payload?.id || localStorage.getItem("userId");
+};
 
 const NewSongs = () => {
   const [songsData, setSongsData] = useState([]);
@@ -16,16 +23,15 @@ const NewSongs = () => {
   const [recentlyAwardedId, setRecentlyAwardedId] = useState(null);
   const [limitReachedId, setLimitReachedId] = useState(null);
 
-  const token = localStorage.getItem("token");
-  const payload = token ? JSON.parse(atob(token.split(".")[1])) : null;
-  const userId = payload?.id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const favourites = useSelector((state) => state.fav.list);
+  const userId = getUserId();
+  const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
 
-// Recupera punti e aggiunte di oggi
- 
+  const favourites = useSelector((state) => state.fav.list);
+  const points = useSelector((state) => state.pointReducer?.pointsByUser?.[userId] || 0);
+
   useEffect(() => {
     const fetchData = async () => {
       const artists = ["Annalisa", "Achille Lauro", "Pinguini Tattici Nucleari", "Serena Brancale"];
@@ -38,53 +44,40 @@ const NewSongs = () => {
         );
         const allData = await Promise.all(fetchPromises);
         setSongsData(allData);
-        setLoading(false);
       } catch {
         setError("Errore nel caricamento dei dati");
+      } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-   const pointsFromRedux = useSelector(
-     (state) => state.pointReducer?.pointsByUser?.[userId] || 0
-   );
-   
   const handleFavouriteClick = (song) => {
-  const today = new Date().toISOString().split("T")[0];
-  const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
+    const today = new Date().toISOString().split("T")[0];
+    const additionsToday = parseInt(localStorage.getItem(`additions_${userId}_${today}`)) || 0;
 
-  if (!isLoggedIn) {
-    setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
-    return;
-  }
+    if (!isLoggedIn) {
+      setErrorMsg("Devi essere loggato per aggiungere ai preferiti");
+      return;
+    }
 
-  const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
-  if (isAlreadyFavourite) return;
+    const isAlreadyFavourite = favourites.some((fav) => fav.id === song.id);
+    if (isAlreadyFavourite) return;
 
-  // ✅ Aggiungi SEMPRE ai preferiti
-  dispatch(addToFavouriteAction(song));
+    dispatch(addToFavouriteAction(song));
 
-  // ✅ Se non hai superato il limite, assegna punti
-  if (additionsToday < 4) {
-    const newPoints = pointsFromRedux + 5;
-    const newAdditions = additionsToday + 1;
+    if (additionsToday < 4) {
+      dispatch(addPoints(userId, 5));
+      localStorage.setItem(`additions_${userId}_${today}`, (additionsToday + 1).toString());
 
-    dispatch(setPointsForUser(userId, newPoints));
-    localStorage.setItem(`points_${userId}`, newPoints.toString());
-    localStorage.setItem(`additions_${userId}_${today}`, newAdditions.toString());
-
-    setRecentlyAwardedId(song.id);
-    setShowPointsMessage(true);
-    setTimeout(() => setShowPointsMessage(false), 3000);
-  } else {
-    // ✅ Nessun punto, ma mostra messaggio di limite raggiunto
-    setLimitReachedId(song.id);
-  }
-};
-
-   
+      setRecentlyAwardedId(song.id);
+      setShowPointsMessage(true);
+      setTimeout(() => setShowPointsMessage(false), 3000);
+    } else {
+      setLimitReachedId(song.id);
+    }
+  };
 
   return (
     <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", padding: "2rem" }}>
@@ -157,12 +150,11 @@ const NewSongs = () => {
                       {recentlyAwardedId === song.id && (
                         <div className="mt-2 gold-text fw-bold text-center">+5 punti ricevuti</div>
                       )}
-                       {limitReachedId === song.id && (
-                                                <Alert variant="warning" className="text-center fw-bold mt-2">
-                                                  Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
-                                                </Alert>
-                                              )}
-
+                      {limitReachedId === song.id && (
+                        <Alert variant="warning" className="text-center fw-bold mt-2">
+                          Hai già raggiunto il limite giornaliero di punti per l'aggiunta ai preferiti
+                        </Alert>
+                      )}
                       {!isLoggedIn && errorMsg && (
                         <Alert variant="danger" className="mt-2">{errorMsg}</Alert>
                       )}
