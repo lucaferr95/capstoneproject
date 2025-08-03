@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/BadgePage.css";
 import { useSelector, useDispatch } from "react-redux";
 import { setPointsForUser } from "../components/Redux/Action/setPoint";
+import { useRef } from "react";
 
 const BadgePage = () => {
   const dispatch = useDispatch();
