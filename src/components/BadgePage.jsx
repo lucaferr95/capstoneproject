@@ -7,6 +7,7 @@ import { useRef } from "react";
 const BadgePage = () => {
   const dispatch = useDispatch();
   const [unlockedBadge, setUnlockedBadge] = useState(null);
+   const previousPointsRef = useRef(0);
  const API_URL = "https://marvellous-suzy-lucaferr-65236e6e.koyeb.app"; 
   // Recupero userId dal token JWT
   const token = localStorage.getItem("token");
@@ -44,17 +45,20 @@ const BadgePage = () => {
 
   // 🎉 Badge appena sbloccato
     useEffect(() => {
-      const previousPointsRef = useRef(points);
+  const previousPoints = previousPointsRef.current;
 
   const justUnlocked = badges.find(
-    (b) => points >= b.requiredPoints && !unlockedBadges.some((ub) => ub.id === b.id)
+    (b) => points >= b.requiredPoints && previousPoints < b.requiredPoints
   );
 
   if (justUnlocked) {
     setUnlockedBadge(justUnlocked);
     setTimeout(() => setUnlockedBadge(null), 5000);
   }
-}, [badges, points]);
+
+  previousPointsRef.current = points;
+}, [points, badges]);
+
 
 
   return (
