@@ -4,7 +4,7 @@ export const setPointsForUser = (userId, points) => ({
   payload: { userId, points, timestamp: Date.now() },
 });
 
-export const addPoints = (amount) => ({
+export const addPoints = (userId, amount) => ({
   type: "ADD_POINTS",
   userId,
   payload: amount,
