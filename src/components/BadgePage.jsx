@@ -42,18 +42,19 @@ const BadgePage = () => {
 
 
   // 🎉 Badge appena sbloccato
-  useEffect(() => {
-    const previousPoints = parseInt(localStorage.getItem(`points_${userId}`) || "0");
+    useEffect(() => {
+      const previousPointsRef = useRef(points);
 
-    const justUnlocked = badges.find(
-      (b) => points >= b.requiredPoints && previousPoints < b.requiredPoints
-    );
+  const justUnlocked = badges.find(
+    (b) => points >= b.requiredPoints && !unlockedBadges.some((ub) => ub.id === b.id)
+  );
 
-    if (justUnlocked) {
-      setUnlockedBadge(justUnlocked);
-      setTimeout(() => setUnlockedBadge(null), 5000);
-    }
-  }, [badges, points, userId]);
+  if (justUnlocked) {
+    setUnlockedBadge(justUnlocked);
+    setTimeout(() => setUnlockedBadge(null), 5000);
+  }
+}, [badges, points]);
+
 
   return (
     <div className="badge-section bg-black bg-gradient px-4 py-5 my-3 position-relative">
