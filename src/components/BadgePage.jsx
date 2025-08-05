@@ -115,10 +115,7 @@ const BadgePage = () => {
         >
           Vai al Quiz
         </button>
-        <button onClick={() => dispatch(setPointsForUser(userId, points + 50))}>
-  Aggiungi 50 punti
-</button>
-
+       
       </div>
     </div>
   );
